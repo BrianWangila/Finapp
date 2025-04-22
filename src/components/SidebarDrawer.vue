@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
       <div v-if="isOpen" class="fixed inset-0 z-40 bg-black bg-opacity-40" @click.self="closeDrawer">
-        <div class="absolute left-0 top-0 w-72 bg-white h-full p-6 flex flex-col shadow-lg">
+        <div class="w-4/5 max-w-xs bg-white h-full p-6 flex flex-col shadow-lg z-50">
           <!-- Profile -->
           <div class="flex items-center gap-4 mb-6">
             <img src="https://i.pravatar.cc/80?img=14" class="w-14 h-14 rounded-full" />
@@ -21,7 +21,7 @@
           <div class="grid grid-cols-2 gap-4 mb-6">
             <button class="bg-pink-100 text-pink-500 p-2 rounded-lg text-sm font-medium">Withdraw</button>
             <button class="bg-violet-100 text-violet-600 p-2 rounded-lg text-sm font-medium">Send</button>
-            <button class="bg-green-100 text-green-600 p-2 rounded-lg text-sm font-medium col-span-2">Cards</button>
+            <button class="bg-green-100 text-green-600 p-2 rounded-lg text-sm font-medium col-span-2">Deposit</button>
           </div>
   
           <!-- Menu -->
@@ -44,6 +44,9 @@
             </div>
           </nav>
         </div>
+
+        <!-- Clickable Backdrop -->
+        <div class="flex-1 bg-black bg-opacity-30" @click="$emit('closeDrawer')"></div>
       </div>
     </transition>
 </template>
