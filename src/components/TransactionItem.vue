@@ -1,4 +1,5 @@
 <template>
+  <!-- <router-link :to="{ name: 'TransactionDetail', params: { id: transaction.id } }" class="block"> -->
     <div class="flex items-center bg-white p-3 rounded-xl shadow gap-4">
       <img :src="logo" class="w-12 h-12 rounded-xl" />
       <div class="flex-1">
@@ -9,21 +10,23 @@
         {{ amount }}
       </div>
     </div>
-  </template>
+  <!-- </router-link> -->
+</template>
 
 
-  
-  <script>
-  export default {
-    name: 'TransactionItem',
 
-    props: {
-      logo: String,
-      name: String,
-      type: String,
-      amount: String,
-      negative: Boolean
-    }
+<script>
+export default {
+  name: 'TransactionItem',
+
+  props: {
+    logo: String,
+    name: String,
+    type: String,
+    amount: String,
+    negative: Boolean,
+    // transaction: object
   }
-  </script>
+}
+</script>
   

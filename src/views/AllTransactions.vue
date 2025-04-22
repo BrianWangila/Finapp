@@ -49,6 +49,7 @@
       return {
         allTransactions: [
           {
+            id: 1,
             name: 'Amazon',
             type: 'Shopping',
             logo: 'https://logo.clearbit.com/amazon.com',
@@ -61,6 +62,7 @@
             category: 'E-commerce'
           },
           {
+            id: 2,
             name: 'Apple',
             type: 'Appstore Purchase',
             logo: 'https://logo.clearbit.com/apple.com',
@@ -73,6 +75,7 @@
             category: 'Digital Services'
           },
           {
+            id: 3,
             name: 'Alex Ljung',
             type: 'Transfer',
             logo: 'https://i.pravatar.cc/40?img=10',
@@ -85,6 +88,7 @@
             category: 'Transfer'
           },
           {
+            id: 4,
             name: 'Beatriz Brito',
             type: 'Transfer',
             logo: 'https://i.pravatar.cc/40?img=12',
@@ -97,6 +101,7 @@
             category: 'Transfer'
           },
           {
+            id: 5,
             name: 'Amazon',
             type: 'Shopping',
             logo: 'https://logo.clearbit.com/amazon.com',

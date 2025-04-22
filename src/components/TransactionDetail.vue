@@ -48,21 +48,15 @@
 <script>
     export default {
     name: 'TransactionDetail',
+    props: ['id'],
     data() {
         return {
-        transaction: this.$route.params.transaction || {
-            name: 'Amazon',
-            type: 'Shopping',
-            logo: 'https://logo.clearbit.com/amazon.com',
-            amount: '- $150',
-            negative: true,
-            date: '2025-04-22',
-            status: 'Completed',
-            to: 'Amazon Inc.',
-            bankName: 'Chase Bank',
-            category: 'E-commerce'
+        transaction: null
         }
-        }
+    },
+
+    created(){
+        this.transaction = transactions.find(t => t.id === parseInt(this.id))
     }
 }
 </script>
