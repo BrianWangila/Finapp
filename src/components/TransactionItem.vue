@@ -2,7 +2,7 @@
     <div class="flex items-center bg-white p-3 rounded-xl shadow gap-4">
       <img :src="logo" class="w-12 h-12 rounded-xl" />
       <div class="flex-1">
-        <p class="font-semibold">{{ name }}</p>
+        <p class="font-bold text-black">{{ name }}</p>
         <p class="text-sm text-gray-500">{{ type }}</p>
       </div>
       <div :class="negative ? 'text-red-500' : 'text-green-500'" class="font-semibold">

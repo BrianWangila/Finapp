@@ -22,8 +22,8 @@
 
 
 
-    <footer>
-      
+    <footer class="text-center text-xs text-gray-500 p-4 bg-white">
+      ©Finapp 2025. All Rights Reserved.
     </footer>
   </div>
 </template>

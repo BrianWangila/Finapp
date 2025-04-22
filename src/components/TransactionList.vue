@@ -2,7 +2,7 @@
     <div>
       <div class="flex justify-between items-center mb-2">
         <h3 class="font-bold text-lg text-black py-2">Transactions</h3>
-        <a href="#" class="text-sm text-violet-600">View All</a>
+        <router-link to="/transactions" class="text-sm text-violet-600">View All</router-link>
       </div>
   
       <div class="space-y-4 ">
