@@ -3,6 +3,7 @@ import AllTransactions from '../views/AllTransactions.vue'
 import LoginPage from '../views/LoginPage.vue'
 import HomePage from '../components/HomePage.vue'
 import SignupPage from '../views/SignupPage.vue'
+import MyCards from '../components/MyCards.vue'
 
 
 const routes = [
@@ -10,7 +11,8 @@ const routes = [
   { path: '/login', component: LoginPage },
   { path: '/signup', component: SignupPage },
   { path: '/home', component: HomePage, meta: { requiresAuth: true } },
-  { path: '/transactions', component: AllTransactions },
+  { path: '/transactions', component: AllTransactions, meta: { requiresAuth: true }},
+  { path: '/my-cards', component: MyCards, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({

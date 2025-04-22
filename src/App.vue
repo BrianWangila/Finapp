@@ -1,13 +1,6 @@
 <template>
   <router-view />
 
-  <!-- Main Content -->
-  <main class="p-4 space-y-6">
-    <HomePage />
-  </main>
-
-
-
     
 </template>
 

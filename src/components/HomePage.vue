@@ -20,6 +20,28 @@
         <BalanceCard />
         <SummaryCards class="py-5"/>
         <TransactionList />
+
+        <div>
+            <div class="flex items-center justify-between px-4 mt-6 py-3">
+                <h2 class="text-lg font-semibold text-black">Your Cards</h2>
+                <router-link to="/my-cards" class="text-blue-600 text-sm">View all</router-link>
+            </div>
+            <div class="overflow-x-auto px-4 py-2">
+                <div class="flex space-x-4">
+                <div v-for="(card, index) in cards" :key="index" class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4 min-w-[250px]">
+                    <div class="text-sm">Balance</div>
+                    <div class="text-xl font-bold mb-4">
+                    {{ card.balance }}
+                    </div>
+                    <div class="text-sm tracking-widest">{{ card.number }}</div>
+                    <div class="flex justify-between text-xs mt-2">
+                    <span>EXP: {{ card.expiry }}</span>
+                    <span>CVV: {{ card.cvv }}</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
       </main>
 
 
@@ -50,6 +72,10 @@
     data() {
       return {
         drawerOpen: false,
+        cards: [
+            { balance: '$1,250.00', number: '**** **** **** 1234', expiry: '12/26', cvv: '123' },
+            { balance: '$500.00', number: '**** **** **** 5678', expiry: '08/25', cvv: '456' }
+        ]
       }
     },
   }

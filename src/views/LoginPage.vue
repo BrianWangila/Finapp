@@ -66,7 +66,8 @@
           return
         }
         // Proceed with login logic
-        alert(`Logging in with ${this.email}`)
+        localStorage.setItem('auth', true)
+        this.$router.push('/home')
       },
     },
   }
