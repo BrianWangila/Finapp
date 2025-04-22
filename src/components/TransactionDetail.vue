@@ -46,18 +46,21 @@
 
 
 <script>
+    import { useTransactionStore } from '../stores/transactionStore'
+
     export default {
     name: 'TransactionDetail',
-    props: ['id'],
-    data() {
+    
+    setup(){
+        const store = useTransactionStore()
         return {
-        transaction: null
+            transaction: store.selectedTransaction
         }
     },
 
-    created(){
-        this.transaction = transactions.find(t => t.id === parseInt(this.id))
-    }
+    // created(){
+    //     this.transaction = transactions.find(t => t.id === parseInt(this.id))
+    // }
 }
 </script>
 

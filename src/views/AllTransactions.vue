@@ -24,6 +24,7 @@
               :logo="transaction.logo"
               :amount="transaction.amount"
               :negative="transaction.negative"
+              :transactionData="transaction"
               />
           </div>
         </div>

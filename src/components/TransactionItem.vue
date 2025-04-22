@@ -16,17 +16,34 @@
 
 
 <script>
-export default {
-  name: 'TransactionItem',
+  import { useRouter } from 'vue-router'
+  import { useTransactionStore } from '../stores/transactionStore'
 
-  props: {
-    logo: String,
-    name: String,
-    type: String,
-    amount: String,
-    negative: Boolean,
-    // transaction: object
+  export default {
+    name: 'TransactionItem',
+
+    props: {
+      logo: String,
+      name: String,
+      type: String,
+      amount: String,
+      negative: Boolean,
+      transactionData: Object,
+    },
+
+    setup(props){
+      const router = useRouter()
+      const transactionStore = useTransactionStore()
+
+      const goToDetail = () => {
+        transactionStore.setTransaction(props.transactionData)
+        router.push( '/transaction-detail' )
+      }
+
+      return {
+        goToDetail
+      }
+    }
   }
-}
 </script>
   
