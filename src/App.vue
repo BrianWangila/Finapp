@@ -16,9 +16,15 @@
     <!-- Main Content -->
     <main class="p-4 space-y-6">
       <BalanceCard />
-      <SummaryCards />
+      <SummaryCards class="py-5"/>
       <TransactionList />
     </main>
+
+
+
+    <footer>
+      
+    </footer>
   </div>
 </template>
 

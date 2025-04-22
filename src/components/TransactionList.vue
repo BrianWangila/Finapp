@@ -1,13 +1,14 @@
 <template>
     <div>
       <div class="flex justify-between items-center mb-2">
-        <h3 class="font-bold text-lg">Transactions</h3>
+        <h3 class="font-bold text-lg text-black py-2">Transactions</h3>
         <a href="#" class="text-sm text-violet-600">View All</a>
       </div>
   
-      <div class="space-y-4">
+      <div class="space-y-4 ">
         <TransactionItem
           logo="https://logo.clearbit.com/amazon.com"
+          class="transaction-item"
           name="Amazon"
           type="Shopping"
           amount="- $150"
@@ -15,6 +16,7 @@
         />
         <TransactionItem
           logo="https://logo.clearbit.com/apple.com"
+          class="transaction-item"
           name="Apple"
           type="Appstore Purchase"
           amount="- $29"
@@ -22,6 +24,7 @@
         />
         <TransactionItem
           logo="https://i.pravatar.cc/32?img=5"
+          class="transaction-item"
           name="Alex Ljung"
           type="Transfer"
           amount="+ $1,000"
@@ -29,19 +32,26 @@
         />
       </div>
     </div>
-  </template>
+</template>
   
 
 
-  <script>
-  import TransactionItem from './TransactionItem.vue'
-  
-  export default {
-    name: 'TransactionList',
+<script>
+import TransactionItem from './TransactionItem.vue'
 
-    components: {
-      TransactionItem
-    }
+export default {
+  name: 'TransactionList',
+
+  components: {
+    TransactionItem
   }
-  </script>
-  
+}
+</script>
+
+
+
+<style scoped>
+  .transaction-item {
+    margin-bottom: 5px;
+  }
+</style>
