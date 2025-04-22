@@ -1,6 +1,6 @@
 <template>
   <!-- <router-link :to="{ name: 'TransactionDetail', params: { id: transaction.id } }" class="block"> -->
-    <div class="flex items-center bg-white p-3 rounded-xl shadow gap-4">
+    <div @click="goToDetail" class="cursor-pointer flex items-center bg-white p-3 rounded-xl shadow gap-4">
       <img :src="logo" class="w-12 h-12 rounded-xl" />
       <div class="flex-1">
         <p class="font-bold text-black">{{ name }}</p>
