@@ -48,7 +48,7 @@
               <ul class="space-y-2 text-sm">
                 <li><router-link to="/home" class="text-gray-700 hover:text-violet-600">Overview</router-link></li>
                 <li><a href="#" class="text-gray-700 hover:text-violet-600">Pages</a></li>
-                <li><a href="#" class="text-gray-700 hover:text-violet-600">My Cards</a></li>
+                <li><router-link to="/my-cards" class="text-gray-700 hover:text-violet-600">My Cards</router-link></li>
               </ul>
             </div>
             <div class="py-5">

@@ -12,24 +12,22 @@
   
       <!-- Transaction List -->
       <div class="p-4 space-y-6 flex-grow">
-        <!-- Today -->
         <div>
-          <h3 class="font-semibold text-gray-600 mb-3">Today</h3>
+          <!-- <h3 v-for="(transaction, day) in groupedTransaction" :key="day" class="font-semibold text-gray-600 mb-3">{{ day }}</h3> -->
           <div class="space-y-3">
-            <TransactionItem class="transaction-item" name="Amazon" type="Shopping" logo="https://logo.clearbit.com/amazon.com" amount="- $150" :negative="true" />
-            <TransactionItem class="transaction-item" name="Apple" type="Appstore Purchase" logo="https://logo.clearbit.com/apple.com" amount="- $29" :negative="true" />
-            <TransactionItem class="transaction-item" name="Alex Ljung" type="Transfer" logo="https://i.pravatar.cc/40?img=10" amount="+ $1,000" :negative="false" />
-            <TransactionItem name="Beatriz Brito" type="Transfer" logo="https://i.pravatar.cc/40?img=12" amount="- $186" :negative="true" />
+            <TransactionItem 
+              v-for="(transaction, index) in allTransactions"
+              :key="index"
+              class="transaction-item" 
+              :name="transaction.name"
+              :type="transaction.type"
+              :logo="transaction.logo"
+              :amount="transaction.amount"
+              :negative="transaction.negative"
+              />
           </div>
         </div>
   
-        <!-- Yesterday -->
-        <div>
-          <h3 class="font-semibold text-gray-600 mb-3 py-3">Yesterday</h3>
-          <div class="space-y-3 transaction-item">
-            <TransactionItem  name="Amazon" type="Shopping" logo="https://logo.clearbit.com/amazon.com" amount="- $150" :negative="true" />
-          </div>
-        </div>
       </div>
   
     </div>
@@ -45,7 +43,95 @@
     
     components: {
       TransactionItem
-    }
+    },
+
+    data(){
+      return {
+        allTransactions: [
+          {
+            name: 'Amazon',
+            type: 'Shopping',
+            logo: 'https://logo.clearbit.com/amazon.com',
+            amount: '- $150',
+            negative: true,
+            date: '2025-04-22',
+            status: 'Completed',
+            to: 'Amazon Inc.',
+            bankName: 'Chase Bank',
+            category: 'E-commerce'
+          },
+          {
+            name: 'Apple',
+            type: 'Appstore Purchase',
+            logo: 'https://logo.clearbit.com/apple.com',
+            amount: '- $29',
+            negative: true,
+            date: '2025-04-22',
+            status: 'Completed',
+            to: 'Apple Services',
+            bankName: 'Bank of America',
+            category: 'Digital Services'
+          },
+          {
+            name: 'Alex Ljung',
+            type: 'Transfer',
+            logo: 'https://i.pravatar.cc/40?img=10',
+            amount: '+ $1,000',
+            negative: false,
+            date: '2025-04-22',
+            status: 'Pending',
+            to: 'Alex Ljung',
+            bankName: 'Wells Fargo',
+            category: 'Transfer'
+          },
+          {
+            name: 'Beatriz Brito',
+            type: 'Transfer',
+            logo: 'https://i.pravatar.cc/40?img=12',
+            amount: '- $186',
+            negative: true,
+            date: '2025-04-22',
+            status: 'Failed',
+            to: 'Beatriz Brito',
+            bankName: 'Citibank',
+            category: 'Transfer'
+          },
+          {
+            name: 'Amazon',
+            type: 'Shopping',
+            logo: 'https://logo.clearbit.com/amazon.com',
+            amount: '- $150',
+            negative: true,
+            date: '2025-04-21',
+            status: 'Completed',
+            to: 'Amazon Inc.',
+            bankName: 'Chase Bank',
+            category: 'E-commerce'
+          }
+        ]
+      }
+    },
+
+    computed: {
+      groupedTransaction() {
+        const today = new Date().toISOString().slice(0, 10)
+        const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+        const grouped = {}
+        this.transactions.forEach(tx => {
+          let label
+          if (tx.date === today) {
+            label = 'Today'
+          } else if (tx.date === yesterday) {
+            label = 'Yesterday'
+          } else {
+            label = new Date(tx.date).toLocaleDateString()
+          }
+          if (!grouped[label]) grouped[label] = []
+          grouped[label].push(tx)
+        })
+        return grouped
+      }
+    },
   }
 </script>
 
