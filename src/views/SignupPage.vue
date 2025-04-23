@@ -6,6 +6,11 @@
         
         <form>
             <div class="mb-4">
+                <label class="block text-sm text-gray-600 mb-2">Username</label>
+                <input v-model="name" type="name" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Username" />
+            </div>
+
+            <div class="mb-4">
                 <label class="block text-sm text-gray-600 mb-2">Email</label>
                 <input v-model="email" type="email" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Email" />
             </div>
@@ -40,6 +45,7 @@
 
     data() {
       return {
+        username: '',
         email: '',
         password: '',
         confirmPassword: ''
@@ -48,7 +54,7 @@
 
     methods: {
       handleSignup() {
-        if (!this.email || !this.password || !this.confirmPassword) {
+        if (!this.username || !this.email || !this.password || !this.confirmPassword) {
           alert('Please fill all fields')
           return
         }
@@ -60,7 +66,7 @@
 
         const authStore = useAuthStore()
 
-        authStore.signup(this.email, this.password)
+        authStore.signup(this.username, this.email, this.password)
         this.$router.push('/login')
       }
     }

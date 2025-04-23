@@ -102,7 +102,7 @@
     }
 
     .space-y-4 li {
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.4rem;
     }
 </style>
   

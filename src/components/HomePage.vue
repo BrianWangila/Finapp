@@ -7,17 +7,22 @@
             <h1 class="font-bold text-xl">Finapp</h1>
             <div class="flex items-center gap-4">
                 <div class="relative">
-                <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">4</span>
-                <button>🔔</button>
+                  <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">4</span>
+                  <button>🔔</button>
+                </div>
+              <img src="https://i.pravatar.cc/32" class="rounded-full w-8 h-8" alt="User" />
             </div>
-            <img src="https://i.pravatar.cc/32" class="rounded-full w-8 h-8" alt="User" />
-        </div>
         </header>
 
 
       <!-- Main Content -->
       <main class="p-4 space-y-6">
-        <BalanceCard />
+        <BalanceCard 
+            @withdraw="showWithdrawModal = true"
+            @send="showSendModal = true"
+            @cards="$router.push('/my-cards')"
+            @exchange="showExchangeModal = true"
+        />
         <SummaryCards class="py-5"/>
         <TransactionList />
 
@@ -42,6 +47,78 @@
                 </div>
             </div>
         </div>
+
+        <!-- Withdraw Modal -->
+        <transition name="slide-up">
+          <div v-if="showWithdrawModal" class="popups-modal fixed bottom-2 h-1/3 z-50 bg-white rounded-t-3xl shadow-lg">
+            <h2 class="text-xl font-bold">Withdraw Money</h2>
+            <hr/>
+            <button @click="showWithdrawModal = false" class="x-button text-sm text-gray-500">x</button>
+            <input placeholder="From Account" class="w-full p-2 mb-2 border-b rounded" />
+            <input placeholder="To (IBAN Number)" class="w-full p-2 mb-2 border-b rounded" />
+            <input placeholder="Amount" type="number" class="w-full p-2 mb-4 border-b rounded" />
+            <div class="flex justify-center py-2">
+              <button class="text-sm bg-violet-600 text-white px-4 py-1 rounded">Withdraw</button>
+            </div>
+          </div>
+        </transition>
+
+        <!-- Send Modal -->
+        <transition name="slide-up">
+          <div v-if="showSendModal" class="popups-modal fixed bottom-2 h-1/3 z-50 bg-white rounded-t-3xl shadow-lg">
+            <h2 class="text-xl font-bold">Send Money</h2>
+            <hr/>
+            <button @click="showSendModal = false" class="x-button text-sm text-gray-500">x</button>
+            <input placeholder="From Account" class="w-full p-2 mb-2 border-b rounded" />
+            <input placeholder="To (Enter Bank ID)" class="w-full p-2 mb-2 border-b rounded" />
+            <input placeholder="Amount" type="number" class="w-full p-2 mb-4 border-b rounded" />
+            <div class="flex justify-center py-2">
+              <button class="text-sm bg-violet-600 text-white px-4 py-1 rounded">Send</button>
+            </div>
+          </div>
+        </transition>
+
+        <!-- Exchange Modal -->
+        <transition name="slide-up">
+          <div v-if="showExchangeModal" class="popups-modal fixed bottom-2 h-1/3 z-50 bg-white rounded-t-3xl shadow-lg">
+            <h2 class="text-xl font-bold">Exchange Currency</h2>
+            <hr/>
+            <button @click="showExchangeModal = false" class="x-button text-sm text-gray-500">x</button>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="text-sm text-gray-600 block mb-1">From</label>
+                <select v-model="exchangeFrom" class="w-full p-2 border-b text-gray-500 rounded">
+                  <option disabled value="">Select</option>
+                  <option>USD</option>
+                  <option>CAD</option>
+                  <option>EURO</option>
+                  <option>AUD</option>
+                </select>
+              </div>
+              
+              <div>
+                <label class="text-sm text-gray-600 block mb-1">To</label>
+                <select v-model="exchangeTo" class="w-full p-2 border-b text-gray-500 rounded">
+                  <option disabled value="">Select</option>
+                  <option>USD</option>
+                  <option>CAD</option>
+                  <option>EURO</option>
+                  <option>AUD</option>
+                </select>
+              </div>
+            </div>
+            <div class="mb-4 py-4">
+              <label class="text-sm text-gray-600 block mb-1">Amount</label>
+              <input v-model="exchangeAmount" type="number" class="w-full p-2 border-b rounded" placeholder="Enter amount" />
+            </div>
+            <div class="flex justify-center py-2">
+              <button class="text-sm bg-violet-600 text-white px-4 py-1 rounded">Exchange</button>
+            </div>
+          </div>
+        </transition>
+
+
       </main>
 
 
@@ -74,6 +151,9 @@
     data() {
       return {
         drawerOpen: false,
+        showWithdrawModal: false,
+        showSendModal: false,
+        showExchangeModal: false,
         
       }
     },
@@ -98,6 +178,44 @@
 
     .cards-section .card {
       margin-right: 1rem;
+    }
+
+    .slide-up-enter-active, .slide-up-leave-active {
+      transition: transform 0.3s ease;
+    }
+    .slide-up-enter-from, .slide-up-leave-to {
+      transform: translateY(100%);
+    }
+
+    .popups-modal {
+      background-color: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      margin: auto;
+    }
+
+    .popups-modal h2 {
+      margin-bottom: 1rem;
+      text-align: center;
+      color: black;
+
+    }
+
+    .popups-modal input {
+      margin-bottom: 0.5rem;
+      color: black;
+    }
+
+    .x-button {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      background-color: transparent;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
     }
 
 </style>

@@ -1,11 +1,14 @@
 // stores/authStore.js
 import { defineStore } from 'pinia'
+import axios from 'axios'
+
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     isAuthenticated: localStorage.getItem('auth') === 'true',
   }),
+
 
   actions: {
     signup(email, password) {
