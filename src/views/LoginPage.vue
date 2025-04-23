@@ -6,28 +6,30 @@
         <p class="text-sm text-center text-gray-500 mb-10">Please login to your account</p>
   
         <!-- Email Input -->
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-gray-600 mb-1" for="email">Email</label>
-          <input
-            v-model="email"
-            type="email"
-            id="email"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Enter your email"
-          />
-        </div>
-  
-        <!-- Password Input -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600 mb-1" for="password">Password</label>
-          <input
-            v-model="password"
-            type="password"
-            id="password"
-            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
-            placeholder="Enter your password"
-          />
-        </div>
+        <form>
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-600 mb-1" for="email">Email</label>
+            <input
+              v-model="email"
+              type="email"
+              id="email"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
+              placeholder="Enter your email"
+            />
+          </div>
+    
+          <!-- Password Input -->
+          <div>
+            <label class="block text-sm font-medium text-gray-600 mb-1" for="password">Password</label>
+            <input
+              v-model="password"
+              type="password"
+              id="password"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
+              placeholder="Enter your password"
+            />
+          </div>
+        </form>
   
         <!-- Links -->
         <div class="flex justify-between text-sm mt-3">
@@ -51,6 +53,8 @@
 
 
 <script>
+  import { useAuthStore } from '@/stores/authStore'
+
   export default {
     name: 'Login',
     data() {
@@ -65,9 +69,13 @@
           alert('Please enter both email and password.')
           return
         }
-        // Proceed with login logic
-        localStorage.setItem('auth', true)
-        this.$router.push('/home')
+        const authStore = useAuthStore()
+        const success = authStore.login(this.email, this.password)
+        if (success) {
+          this.$router.push('/home')
+        } else {
+          alert('Invalid email or password, try again.')
+        }
       },
     },
   }

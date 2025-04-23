@@ -18,10 +18,10 @@
           <!-- Balance -->
           <div class="bg-white rounded-2xl p-6 shadow-md space-y-4">
             <div>
-              <p class="text-gray-500">Total Balance</p>
+              <p class="text-gray-500">Balance</p>
               <h2 class="text-3xl font-bold text-black">$2,562.50</h2>
             </div>
-            <div class="grid grid-cols-4 gap-3 text-center text-yellow-500">
+            <div class="grid grid-cols-4 gap-3 text-center text-yellow-500 py-3">
               <div class="space-y-1">
                 <button class="bg-pink-500 text-white p-2 rounded-full text-xl">⬇️</button>
                 <p>Deposit</p>
@@ -71,22 +71,24 @@
 
 
 <script>
-    export default {
-        name: 'SideDrawer',
-        props: ['isOpen'],
-        methods: {
-            closeDrawer() {
-            this.$emit('close')
-            }
-        },
+  import { useAuthStore } from '@/stores/authStore'
 
-        methods: {
-          logout(){
-            localStorage.removeItem('auth')
-            this.$router.push('/login')
-          }
-        }
-    }
+  export default {
+      name: 'SideDrawer',
+      props: ['isOpen'],
+      
+      methods: {
+        closeDrawer() {
+          this.$emit('close')
+        },
+        logout() {
+          const authStore = useAuthStore()
+          authStore.logout()
+          this.$router.push('/login')
+        },
+      }
+
+  }
 </script>
 
 
@@ -97,6 +99,10 @@
     }
     .fade-enter-from, .fade-leave-to {
         opacity: 0;
+    }
+
+    .space-y-4 li {
+        margin-bottom: 0.2rem;
     }
 </style>
   

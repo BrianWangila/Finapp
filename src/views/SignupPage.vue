@@ -16,10 +16,11 @@
             </div>
 
             <div>
-                <label class="block text-sm text-gray-600 mb-1">Enter Password Again</label>
-                <input v-model="password" type="password" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Password" />
+                <label class="block text-sm text-gray-600 mb-1">Re-enter Password</label>
+                <input v-model="confirmPassword" type="password" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Password" />
             </div>
         </form>
+
         <router-link to="/" class="text-blue-600 text-sm">Already have an account? Login</router-link>
       </div>
   
@@ -32,22 +33,34 @@
 
 
 <script>
+  import { useAuthStore } from '@/stores/authStore'
+
   export default {
     name: 'SignUp',
+
     data() {
       return {
-        name: '',
         email: '',
-        password: ''
+        password: '',
+        confirmPassword: ''
       }
     },
+
     methods: {
       handleSignup() {
-        if (!this.email || !this.password) {
+        if (!this.email || !this.password || !this.confirmPassword) {
           alert('Please fill all fields')
           return
         }
-        localStorage.setItem('auth', true)
+
+        if (this.password !== this.confirmPassword) {
+          alert('Passwords do not match.')
+          return
+        }
+
+        const authStore = useAuthStore()
+
+        authStore.signup(this.email, this.password)
         this.$router.push('/login')
       }
     }

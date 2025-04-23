@@ -5,6 +5,8 @@ import HomePage from '../components/HomePage.vue'
 import SignupPage from '../views/SignupPage.vue'
 import MyCards from '../components/MyCards.vue'
 import TransactionDetail from '../components/TransactionDetail.vue'
+import { useTransactionStore } from '../stores/transactionStore'
+import { useAuthStore } from '@/stores/authStore'
 
 
 const routes = [
@@ -24,9 +26,12 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-  const isAuth = localStorage.getItem('auth') === 'true'
-  if (to.meta.requiresAuth && !isAuth) next('/login')
-  else next()
+  const auth = useAuthStore()
+  if(to.meta.requiresAuth && !auth.isAuthenticated) {
+    next({ path: '/login' })
+  } else {
+    next()
+  }
 })
 
 export default router
