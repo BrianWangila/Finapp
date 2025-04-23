@@ -1,5 +1,7 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import axios from 'axios'
+
 
 export const useTransactionStore = defineStore('transaction', {
   state: () => ({
@@ -73,13 +75,34 @@ export const useTransactionStore = defineStore('transaction', {
     ]
   }),
 
+
   actions: {
+    async fetchTransactions() {
+      try {
+        const response = await axios.get('http://localhost:8000/api/transactions')
+        this.allTransactions = response.data
+      } catch (error) {
+        console.error('Error fetching transactions:', error)
+      }
+    },
+
+    async createTransaction(data) {
+      try {
+        const res = await axios.post('http://localhost:8000/api/transactions', data)
+        this.allTransactions.unshift(res.data)
+      } catch (err) {
+        console.error(err)
+      }
+    },
+
     setTransaction(transaction) {
       this.selectedTransaction = transaction
     },
+
     clearTransaction() {
       this.selectedTransaction = null
     },
+
     selectTransaction(transaction) {
       this.selectedTransaction = transaction
     }

@@ -6,36 +6,61 @@ import axios from 'axios'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    isAuthenticated: localStorage.getItem('auth') === 'true',
+    isAuthenticated: false,
+    token: localStorage.getItem('token') || null,
   }),
 
 
   actions: {
-    signup(email, password) {
-      // You could expand this with real API logic or localStorage-based mock auth
-      const user = { email, password }
-      localStorage.setItem('user', JSON.stringify(user))
-      this.user = user
-      this.isAuthenticated = true
-      localStorage.setItem('auth', true)
-    },
+        async signup(name, email, password) {
+            try {
+            const res = await axios.post('http://localhost:8000/api/register', { name, email, password })
+            this.token = res.data.token
+            this.user = res.data.user
+            this.isAuthenticated = true
+            localStorage.setItem('token', this.token)
+            axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+            
+            } catch (err) {
+            console.error(err)
+            }
+        },
 
-    login(email, password) {
-      const savedUser = JSON.parse(localStorage.getItem('user'))
-      if (savedUser?.email === email && savedUser?.password === password) {
-        this.user = savedUser
-        this.isAuthenticated = true
-        localStorage.setItem('auth', true)
-        return true
-      } else {
-        return false
-      }
-    },
+        async login(email, password) {
+            try {
+                const res = await axios.post('http://localhost:8000/api/login', { email, password })
+                this.token = res.data.token
+                this.user = res.data.user
+                this.isAuthenticated = true
+                localStorage.setItem('token', this.token)
+                axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+                return true
 
-    logout() {
-      this.user = null
-      this.isAuthenticated = false
-      localStorage.removeItem('auth')
+            } catch (error) {
+                console.error(err)
+                return false
+            }
+        
+        },
+
+        async logout() {
+            axios.post('http://localhost:8000/api/logout')
+              .then(() => {
+                this.user = null
+                this.isAuthenticated = false
+                this.token = null
+                localStorage.removeItem('token')
+                delete axios.defaults.headers.common['Authorization']
+            })
+              .catch(error => {
+                console.error('Logout failed:', error)
+                // Still remove local data in case backend fails
+                this.user = null
+                this.isAuthenticated = false
+                this.token = null
+                localStorage.removeItem('token')
+                delete axios.defaults.headers.common['Authorization']
+            })
+        }
     }
-  }
 })

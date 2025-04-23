@@ -4,7 +4,7 @@
         <header class="bg-violet-600 text-white p-4 flex items-center justify-between">
             <button @click="drawerOpen = true" class="text-2xl">&#9776;</button>
             <SidebarDrawer :isOpen="drawerOpen" @close="drawerOpen = false" />
-            <h1 class="font-bold text-xl">Finapp</h1>
+            <h1 class="font-bold text-xl">Capital Land</h1>
             <div class="flex items-center gap-4">
                 <div class="relative">
                   <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">4</span>
@@ -123,7 +123,7 @@
 
 
         <footer class="text-center text-xs text-gray-500 p-4 bg-white">
-          ©Finapp 2025. All Rights Reserved.
+          ©Capital Land Investments 2025. All Rights Reserved.
         </footer>
     </div>
   </template>
