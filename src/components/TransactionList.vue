@@ -6,29 +6,13 @@
       </div>
   
       <div class="space-y-4 ">
-        <TransactionItem
-          logo="https://logo.clearbit.com/amazon.com"
+
+        <TransactionItem 
+          v-for="tx in transactions"
+          :key="tx.id"
           class="transaction-item"
-          name="Amazon"
-          type="Shopping"
-          amount="- $150"
-          :negative="true"
-        />
-        <TransactionItem
-          logo="https://logo.clearbit.com/apple.com"
-          class="transaction-item"
-          name="Apple"
-          type="Appstore Purchase"
-          amount="- $29"
-          :negative="true"
-        />
-        <TransactionItem
-          logo="https://i.pravatar.cc/32?img=5"
-          class="transaction-item"
-          name="Alex Ljung"
-          type="Transfer"
-          amount="+ $1,000"
-          :negative="false"
+          v-bind="tx"
+
         />
       </div>
     </div>
@@ -37,15 +21,24 @@
 
 
 <script>
-import TransactionItem from './TransactionItem.vue'
+  import TransactionItem from './TransactionItem.vue'
+  import { useTransactionStore } from '../stores/transactionStore'
 
-export default {
-  name: 'TransactionList',
 
-  components: {
-    TransactionItem
+  export default {
+    name: 'TransactionList',
+
+    components: {
+      TransactionItem
+    },
+
+    computed: {
+      transactions(){
+        const store = useTransactionStore()
+        return store.allTransactions.slice(0, 3)
+      }
+    }
   }
-}
 </script>
 
 

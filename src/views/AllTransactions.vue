@@ -13,7 +13,6 @@
       <!-- Transaction List -->
       <div class="p-4 space-y-6 flex-grow">
         <div>
-          <!-- <h3 v-for="(transaction, day) in groupedTransaction" :key="day" class="font-semibold text-gray-600 mb-3">{{ day }}</h3> -->
           <div class="space-y-3">
             <TransactionItem 
               v-for="(transaction, index) in allTransactions"
@@ -24,7 +23,8 @@
               :logo="transaction.logo"
               :amount="transaction.amount"
               :negative="transaction.negative"
-              :transactionData="transaction"
+              @click="viewTransactionDetail(transaction)"
+              
               />
           </div>
         </div>
@@ -38,6 +38,8 @@
 
 <script>
   import TransactionItem from '../components/TransactionItem.vue'
+  import { useTransactionStore } from '../stores/transactionStore'
+  import { mapState } from 'pinia'
   
   export default {
     name: 'AllTransactions',
@@ -46,98 +48,29 @@
       TransactionItem
     },
 
-    data(){
+    setup() {
+      const store = useTransactionStore()
+      const viewTransactionDetail = (transaction) => {
+        store.selectTransaction(transaction)
+        window.location.href = `/transaction-detail/${transaction.id}`
+      }
+
       return {
-        allTransactions: [
-          {
-            id: 1,
-            name: 'Amazon',
-            type: 'Shopping',
-            logo: 'https://logo.clearbit.com/amazon.com',
-            amount: '- $150',
-            negative: true,
-            date: '2025-04-22',
-            status: 'Completed',
-            to: 'Amazon Inc.',
-            bankName: 'Chase Bank',
-            category: 'E-commerce'
-          },
-          {
-            id: 2,
-            name: 'Apple',
-            type: 'Appstore Purchase',
-            logo: 'https://logo.clearbit.com/apple.com',
-            amount: '- $29',
-            negative: true,
-            date: '2025-04-22',
-            status: 'Completed',
-            to: 'Apple Services',
-            bankName: 'Bank of America',
-            category: 'Digital Services'
-          },
-          {
-            id: 3,
-            name: 'Alex Ljung',
-            type: 'Transfer',
-            logo: 'https://i.pravatar.cc/40?img=10',
-            amount: '+ $1,000',
-            negative: false,
-            date: '2025-04-22',
-            status: 'Pending',
-            to: 'Alex Ljung',
-            bankName: 'Wells Fargo',
-            category: 'Transfer'
-          },
-          {
-            id: 4,
-            name: 'Beatriz Brito',
-            type: 'Transfer',
-            logo: 'https://i.pravatar.cc/40?img=12',
-            amount: '- $186',
-            negative: true,
-            date: '2025-04-22',
-            status: 'Failed',
-            to: 'Beatriz Brito',
-            bankName: 'Citibank',
-            category: 'Transfer'
-          },
-          {
-            id: 5,
-            name: 'Amazon',
-            type: 'Shopping',
-            logo: 'https://logo.clearbit.com/amazon.com',
-            amount: '- $150',
-            negative: true,
-            date: '2025-04-21',
-            status: 'Completed',
-            to: 'Amazon Inc.',
-            bankName: 'Chase Bank',
-            category: 'E-commerce'
-          }
-        ]
+        allTransactions: store.allTransactions,
+        viewTransactionDetail
       }
     },
 
     computed: {
-      groupedTransaction() {
-        const today = new Date().toISOString().slice(0, 10)
-        const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
-        const grouped = {}
-        this.transactions.forEach(tx => {
-          let label
-          if (tx.date === today) {
-            label = 'Today'
-          } else if (tx.date === yesterday) {
-            label = 'Yesterday'
-          } else {
-            label = new Date(tx.date).toLocaleDateString()
-          }
-          if (!grouped[label]) grouped[label] = []
-          grouped[label].push(tx)
-        })
-        return grouped
-      }
+      ...mapState(useTransactionStore, ['allTransactions']),
+     
     },
+
+    methods: {
+      viewTransactionDetail(transaction) {
+        this.$router.push({ name: 'TransactionDetail', params: { id: transaction.id } })
+      }
+    }
   }
 </script>
 

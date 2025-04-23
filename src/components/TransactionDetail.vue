@@ -47,20 +47,24 @@
 
 <script>
     import { useTransactionStore } from '../stores/transactionStore'
+    import { useRoute } from 'vue-router'
+    import { computed } from 'vue'
+
+
 
     export default {
     name: 'TransactionDetail',
     
     setup(){
         const store = useTransactionStore()
-        return {
-            transaction: store.selectedTransaction
-        }
+        const route = useRoute()
+
+        const transaction = computed(() => {
+            return store.allTransactions.find(t => t.id === parseInt(route.params.id))
+        })
+        return { transaction }
     },
 
-    // created(){
-    //     this.transaction = transactions.find(t => t.id === parseInt(this.id))
-    // }
 }
 </script>
 

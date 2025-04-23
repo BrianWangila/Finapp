@@ -14,7 +14,7 @@ const routes = [
   { path: '/home', component: HomePage, meta: { requiresAuth: true } },
   { path: '/transactions', component: AllTransactions, meta: { requiresAuth: true }},
   { path: '/my-cards', component: MyCards, meta: { requiresAuth: true } },
-  { path: '/transaction-detail', component: TransactionDetail, meta: { requiresAuth: true } }
+  { path: '/transaction-detail/:id', component: TransactionDetail, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({
