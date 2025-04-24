@@ -2,6 +2,18 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
+// Set the base URL for axios
+const api = axios.create({
+  baseURL: 'https://capitallandinvest.com/api/api',
+  // baseURL: 'https://api.capitallandinvest.com/api',
+  // baseURL: 'http://127.0.0.1:8000/api',
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  
+})
+
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -14,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
   actions: {
         async signup(username, email, password) {
             try {
-            const res = await axios.post('https://api.capitallandinvest.com/api/register', { username, email, password })
+            const res = await api.post('/register', { username, email, password })
             this.token = res.data.token
             this.user = res.data.user
             this.isAuthenticated = true
@@ -28,15 +40,15 @@ export const useAuthStore = defineStore('auth', {
 
         async login(email, password) {
             try {
-                const res = await axios.post('https://api.capitallandinvest.com/api/login', { email, password })
+                const res = await api.post('/login', { email, password })
                 this.token = res.data.token
                 this.user = res.data.user
                 this.isAuthenticated = true
                 localStorage.setItem('token', this.token)
                 axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-                // return true
+                return true
 
-                this.router.push('/home') 
+                // this.router.push('/home') 
 
             } catch (error) {
                 // console.error(err)
@@ -46,7 +58,7 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async logout() {
-            axios.post('https://api.capitallandinvest.com/api/logout')
+            api.post('/logout')
               .then(() => {
                 this.user = null
                 this.isAuthenticated = false
@@ -65,16 +77,17 @@ export const useAuthStore = defineStore('auth', {
             })
         },
 
-        async checkAuth() {
-            try {
-              const response = await axios.get('https://api.capitallandinvest.com/api/user')
-              this.user = response.data
-              this.isAuthenticated = true
-
-            } catch (err) {
-              this.user = null
-              this.isAuthenticated = false
-            }
-        }
+        // async checkAuth() {
+        //   if (!this.token) return
+        //   try {
+        //     api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
+        //     const response = await api.get('/user')
+        //     this.user = response.data
+        //     this.isAuthenticated = true
+        //   } catch (err) {
+        //     this.user = null
+        //     this.isAuthenticated = false
+        //   }
+        // }
     }
 })

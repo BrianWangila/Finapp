@@ -81,6 +81,7 @@ export const useTransactionStore = defineStore('transaction', {
     async fetchTransactions() {
       try {
         const response = await axios.get('http://localhost:8000/api/transactions')
+        withCredentials: true,
         this.allTransactions = response.data
       } catch (error) {
         console.error('Error fetching transactions:', error)

@@ -19,7 +19,7 @@ app.use(router)
 
 const authStore = useAuthStore()
 
-authStore.checkAuth()
+// authStore.checkAuth()
 
 if (localStorage.getItem('auth') === 'true') {
     axios.get('/api/user')
