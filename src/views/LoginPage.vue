@@ -13,7 +13,7 @@
               v-model="email"
               type="email"
               id="email"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
+              class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="Enter your email"
             />
           </div>
@@ -25,7 +25,7 @@
               v-model="password"
               type="password"
               id="password"
-              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
+              class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="Enter your password"
             />
           </div>

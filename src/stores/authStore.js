@@ -12,9 +12,9 @@ export const useAuthStore = defineStore('auth', {
 
 
   actions: {
-        async signup(name, email, password) {
+        async signup(username, email, password) {
             try {
-            const res = await axios.post('http://localhost:8000/api/register', { name, email, password })
+            const res = await axios.post('https://api.capitallandinvest.com/api/register', { username, email, password })
             this.token = res.data.token
             this.user = res.data.user
             this.isAuthenticated = true
@@ -28,23 +28,25 @@ export const useAuthStore = defineStore('auth', {
 
         async login(email, password) {
             try {
-                const res = await axios.post('http://localhost:8000/api/login', { email, password })
+                const res = await axios.post('https://api.capitallandinvest.com/api/login', { email, password })
                 this.token = res.data.token
                 this.user = res.data.user
                 this.isAuthenticated = true
                 localStorage.setItem('token', this.token)
                 axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-                return true
+                // return true
+
+                this.router.push('/home') 
 
             } catch (error) {
-                console.error(err)
+                // console.error(err)
                 return false
             }
         
         },
 
         async logout() {
-            axios.post('http://localhost:8000/api/logout')
+            axios.post('https://api.capitallandinvest.com/api/logout')
               .then(() => {
                 this.user = null
                 this.isAuthenticated = false
@@ -61,6 +63,18 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.removeItem('token')
                 delete axios.defaults.headers.common['Authorization']
             })
+        },
+
+        async checkAuth() {
+            try {
+              const response = await axios.get('https://api.capitallandinvest.com/api/user')
+              this.user = response.data
+              this.isAuthenticated = true
+
+            } catch (err) {
+              this.user = null
+              this.isAuthenticated = false
+            }
         }
     }
 })

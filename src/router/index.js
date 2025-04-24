@@ -19,6 +19,7 @@ const routes = [
   { path: '/transaction-detail/:id', component: TransactionDetail, meta: { requiresAuth: true } }
 ]
 
+
 const router = createRouter({
   history: createWebHistory(),
   routes

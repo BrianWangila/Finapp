@@ -6,6 +6,7 @@ import axios from 'axios'
 export const useTransactionStore = defineStore('transaction', {
   state: () => ({
     selectedTransaction: null,
+    // allTransactions: []
     allTransactions: [
       {
         id: 1,

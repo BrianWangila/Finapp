@@ -7,22 +7,22 @@
         <form>
             <div class="mb-4">
                 <label class="block text-sm text-gray-600 mb-2">Username</label>
-                <input v-model="name" type="name" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Username" />
+                <input v-model="username" type="name" class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Username" />
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm text-gray-600 mb-2">Email</label>
-                <input v-model="email" type="email" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Email" />
+                <input v-model="email" type="email" class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Email" />
             </div>
     
             <div>
                 <label class="block text-sm text-gray-600 mb-2">Password</label>
-                <input v-model="password" type="password" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Password" />
+                <input v-model="password" type="password" class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Password" />
             </div>
 
             <div>
                 <label class="block text-sm text-gray-600 mb-1">Re-enter Password</label>
-                <input v-model="confirmPassword" type="password" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Password" />
+                <input v-model="confirmPassword" type="password" class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Re-enter Password" />
             </div>
         </form>
 
@@ -54,7 +54,7 @@
 
     methods: {
       handleSignup() {
-        if (!this.username || !this.email || !this.password || !this.confirmPassword) {
+        if (!this.email || !this.password || !this.confirmPassword) {
           alert('Please fill all fields')
           return
         }
