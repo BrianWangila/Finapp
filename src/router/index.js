@@ -26,10 +26,18 @@ const router = createRouter({
 });
 
 
-router.beforeEach((to, from, next) => {
-  const auth = useAuthStore()
-  if(to.meta.requiresAuth && !auth.isAuthenticated) {
+router.beforeEach(async (to, from, next) => {
+
+  const authStore = useAuthStore()
+  await authStore.restoreAuthState()
+
+  
+  if(to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ path: '/login' })
+    
+  } else if (to.path === '/login' && authStore.isAuthenticated) {
+    next({ path: '/home' })
+
   } else {
     next()
   }

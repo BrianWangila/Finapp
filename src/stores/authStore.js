@@ -5,8 +5,8 @@ import api from '../api'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: null,
-    isAuthenticated: false,
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    isAuthenticated: localStorage.getItem('isAuthenticated') === 'true' || false,
     token: localStorage.getItem('token') || null,
   }),
 
@@ -22,11 +22,11 @@ export const useAuthStore = defineStore('auth', {
               password_confirmation: confirmPassword
             })
             this.user = res.data.user
-            console.log('User data:', this.user)
             this.token = res.data.token
-            console.log('User token:', this.token)
             this.isAuthenticated = true
+            localStorage.setItem('user', JSON.stringify(this.user))
             localStorage.setItem('token', this.token)
+            localStorage.setItem('isAuthenticated', 'true')
             return true
 
           } catch (err) {
@@ -45,7 +45,9 @@ export const useAuthStore = defineStore('auth', {
                 console.log('User data:', this.user)
                 this.token = res.data.token
                 this.isAuthenticated = true
+                localStorage.setItem('user', JSON.stringify(this.user))
                 localStorage.setItem('token', this.token)
+                localStorage.setItem('isAuthenticated', 'true')
                 return true
 
             } catch (err) {
@@ -60,7 +62,9 @@ export const useAuthStore = defineStore('auth', {
               this.user = null
               this.token = null
               this.isAuthenticated = false
+              localStorage.removeItem('user')
               localStorage.removeItem('token')
+              localStorage.removeItem('isAuthenticated')
 
             } catch (err) {
               console.error('Logout error', err)
@@ -72,12 +76,22 @@ export const useAuthStore = defineStore('auth', {
             const res = await api.get('/api/user')
             this.user = res.data
             this.isAuthenticated = true
+            localStorage.setItem('user', JSON.stringify(this.user))
+            localStorage.setItem('isAuthenticated', 'true')
 
           } catch (err) {
             this.user = null
             this.token = null
             this.isAuthenticated = false
+            localStorage.removeItem('user')
             localStorage.removeItem('token')
+            localStorage.removeItem('isAuthenticated')
+          }
+        },
+
+        async restoreAuthState() {
+          if (this.token && !this.isAuthenticated) {
+            await this.fetchUser()
           }
         }
     }
