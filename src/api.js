@@ -3,8 +3,8 @@ import axios from 'axios'
 
 const api = axios.create({
   // baseURL: 'https://capitallandinvest.com/api',
-  // baseURL: 'https://api.capitallandinvest.com',
-  baseURL: 'http://127.0.0.1:8000',
+  // baseURL: 'http://127.0.0.1:8000',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: false,
   headers: {
     'Content-Type': 'application/json',
