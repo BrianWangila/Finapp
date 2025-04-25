@@ -6,7 +6,7 @@
         <p class="text-sm text-center text-gray-500 mb-10">Please login to your account</p>
   
         <!-- Email Input -->
-        <form>
+        <form @submit.prevent="handleLogin">
           <div class="mb-6">
             <label class="block text-sm font-medium text-gray-600 mb-1" for="email">Email</label>
             <input
@@ -52,35 +52,64 @@
   
 
 
-<script>
+<script setup>
+  import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
   import { useAuthStore } from '../stores/authStore'
 
+  const router = useRouter()
+  const authStore = useAuthStore()
 
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        email: '',
-        password: '',
+  // Form state
+  const email = ref('')
+  const password = ref('')
+
+  // Handle login
+  const handleLogin = async () => {
+    if (!email.value || !password.value) {
+      alert('Please enter both email and password.')
+      return
+    }
+
+    try {
+      const success = await authStore.login(email.value, password.value)
+      if (success) {
+        router.push('/home')
+      } else {
+        alert('Invalid email or password, try again.')
       }
-    },
-
-    methods: {
-      async handleLogin() {
-        if (!this.email || !this.password) {
-          alert('Please enter both email and password.')
-          return
-        }
-        
-        const authStore = useAuthStore()
-        const success = await authStore.login(this.email, this.password)
-        if (success) {
-          this.$router.push('/home')
-        } else {
-          alert('Invalid email or password, try again.')
-        }
-      },
-    },
+    } catch (err) {
+      console.error('Login error:', err)
+      alert('An error occurred during login. Please try again.')
+    }
   }
+
+
+  // export default {
+  //   name: 'Login',
+  //   data() {
+  //     return {
+  //       email: '',
+  //       password: '',
+  //     }
+  //   },
+
+  //   methods: {
+  //     async handleLogin() {
+  //       if (!this.email || !this.password) {
+  //         alert('Please enter both email and password.')
+  //         return
+  //       }
+        
+  //       const authStore = useAuthStore()
+  //       const success = await authStore.login(this.email, this.password)
+  //       if (success) {
+  //         this.$router.push('/home')
+  //       } else {
+  //         alert('Invalid email or password, try again.')
+  //       }
+  //     },
+  //   },
+  // }
 </script>
   

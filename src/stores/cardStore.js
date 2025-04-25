@@ -16,30 +16,34 @@ export const useCardStore = defineStore('card', {
 
       try {
         const res = await api.get('/api/cards')
-        this.cards = res.data
+        console.log('API response for fetchCards:', res)
+        this.cards = res.data || []
 
-        console.log(this.cards)
+        console.log('Fetched cards', this.cards)
 
       } catch (err) {
         console.error('Error fetching cards:', err)
-        this.error = 'Failed to load cards'
+        this.error = 'Failed to load cards: ' + (err.response?.data?.message || err.message)
       } finally {
         this.loading = false
       }
-    }
-  },
+    },
+  
 
 
-  async addCard(cardData) {
-    try {
-      const res = await api.post('/api/cards', cardData)
-      this.cards.push(res.data)
-      return true
-      
-    } catch (err) {
-      console.error('Add card error:', err)
-      return false
+    async addCard(cardData) {
+      try {
+        const res = await api.post('/api/cards', cardData)
+        console.log('API response for addCard:', res)
+        this.cards.push(res.data)
+        this.error = null
+        return true
+        
+      } catch (err) {
+        console.error('Add card error:', err)
+        this.error = 'Failed to add card: ' + (err.response?.data?.message || err.message)
+        return false
+      }
     }
   }
-
 })

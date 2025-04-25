@@ -1,6 +1,4 @@
 import axios from 'axios'
-import router from '@/router'
-import Cookies from 'js-cookie'
 
 
 const api = axios.create({
@@ -13,8 +11,6 @@ const api = axios.create({
     'Accept': 'application/json'
   },
 })
-
-
 
 
 api.interceptors.request.use(config => {

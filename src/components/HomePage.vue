@@ -32,19 +32,35 @@
                 <router-link to="/my-cards" class="text-blue-600 text-sm">View all</router-link>
             </div>
             <div class="overflow-x-auto py-2">
-                <div class="flex space-x-4">
-                    <div v-for="(card, index) in cards" :key="index" class="card bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4 min-w-[250px]">
-                        <div class="text-sm">Balance</div>
-                        <div class="text-xl font-bold mb-4 py-2">
-                        {{ card.balance }}
-                        </div>
-                        <div class="text-sm tracking-widest">**** **** **** {{ card.number.slice(-4) }}</div>
-                        <div class="flex justify-between text-xs mt-2 py-2">
-                        <span>EXP: {{ card.expiry }}</span>
-                        <span>CVV: {{ card.cvv }}</span>
-                        </div>
-                    </div>
+              <div v-if="cardStore.loading" class="text-center p-4">
+                <p>Loading cards...</p>
+              </div>
+
+              <div v-else-if="cardStore.error" class="text-center p-4 text-red-500">
+                <p>{{ cardStore.error }}</p>
+              </div>
+
+              <div v-else-if="cardStore.cards && cardStore.cards.length" class="flex space-x-4">
+                <div 
+                  v-for="(card, index) in cardStore.cards" 
+                  :key="index" 
+                  class="card bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4 min-w-[250px]"
+                >
+                  <div class="text-sm">Balance</div>
+                  <div class="text-xl font-bold mb-4 py-2">
+                    {{ card.balance }}
+                  </div>
+                  <div class="text-sm tracking-widest">**** **** **** {{ card.number.slice(-4) }}</div>
+                  <div class="flex justify-between text-xs mt-2 py-2">
+                    <span>EXP: {{ card.expiry }}</span>
+                    <span>CVV: {{ card.cvv }}</span>
+                  </div>
                 </div>
+              </div>
+
+              <div v-else class="text-center text-black p-4">
+                <p>No cards available. Add a card in My Cards!</p>
+              </div>
             </div>
         </div>
 
@@ -130,41 +146,56 @@
   
   
   
-  <script>
-    import BalanceCard from './BalanceCard.vue'
-    import SummaryCards from './SummaryCards.vue'
-    import TransactionList from './TransactionList.vue'
-    import SidebarDrawer from './SidebarDrawer.vue'
-    import MyCards from './MyCards.vue'
-  
-  export default {
-    name: 'App',
-  
-    components: {
-      BalanceCard,
-      SummaryCards,
-      TransactionList,
-      SidebarDrawer,
-      MyCards
-    },
-    
-    data() {
-      return {
-        drawerOpen: false,
-        showWithdrawModal: false,
-        showSendModal: false,
-        showExchangeModal: false,
-        
-      }
-    },
+<script setup>
+  import { ref, onMounted } from 'vue'
+  import BalanceCard from './BalanceCard.vue'
+  import SummaryCards from './SummaryCards.vue'
+  import TransactionList from './TransactionList.vue'
+  import SidebarDrawer from './SidebarDrawer.vue'
+  import { useCardStore } from '@/stores/cardStore'
 
-    computed: {
-        cards() {
-            return this.$options.components.MyCards.data().cards;
-        }
-    },
-  }
-  </script>
+  const cardStore = useCardStore()
+  const drawerOpen = ref(false)
+  const showWithdrawModal = ref(false)
+  const showSendModal = ref(false)
+  const showExchangeModal = ref(false)
+  const exchangeFrom = ref('')
+  const exchangeTo = ref('')
+  const exchangeAmount = ref('')
+
+  onMounted(() => {
+    cardStore.fetchCards()
+  })
+
+  
+  // export default {
+  //   name: 'App',
+  
+  //   components: {
+  //     BalanceCard,
+  //     SummaryCards,
+  //     TransactionList,
+  //     SidebarDrawer,
+  //     MyCards
+  //   },
+    
+  //   data() {
+  //     return {
+  //       drawerOpen: false,
+  //       showWithdrawModal: false,
+  //       showSendModal: false,
+  //       showExchangeModal: false,
+        
+  //     }
+  //   },
+
+  //   computed: {
+  //       cards() {
+  //           return this.$options.components.MyCards.data().cards;
+  //       }
+  //   },
+  // }
+</script>
   
 
   <style scoped>

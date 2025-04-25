@@ -11,24 +11,63 @@
 
 
       <!-- Add new card form -->
-      <div class="bg-white shadow-md rounded-lg p-4 mt-4">
+      <div v-if="showForm" class="bg-white shadow-md rounded-lg p-4 mt-4">
         <h3 class="text-lg font-semibold text-gray-700">Add New Card</h3>
         <form @submit.prevent="handleAddCard">
           <div class="grid grid-cols-2 gap-4 mt-4">
-            <input type="text" v-model="newCard.number" placeholder="Card Number" class="text-black border-b rounded p-2" required />
-            <input type="text" v-model="newCard.expiry" placeholder="Expiry Date (MM/YY)" pattern="\d{2}/\d{2}" class="text-black border-b rounded p-2" required />
-            <input type="text" v-model="newCard.cvv" placeholder="CVV (3 digits)" class="text-black border-b rounded p-2" required />
-            <input type="text" v-model="newCard.balance" placeholder="Balance" class="text-black border-b rounded p-2" required />
+            <input 
+              type="text" 
+              v-model="newCard.number" 
+              placeholder="Card Number" 
+              class="text-black border-b rounded p-2" 
+              required 
+            />
+            <input 
+              type="text" 
+              v-model="newCard.expiry" 
+              placeholder="Expiry Date (MM/YY)" 
+              pattern="\d{2}/\d{2}" 
+              class="text-black border-b rounded p-2" 
+              required 
+            />
+            <input 
+              type="text" 
+              v-model="newCard.cvv" 
+              placeholder="CVV (3 digits)" 
+              class="text-black border-b rounded p-2" 
+              required
+            />
+            <input 
+              type="text" 
+              v-model="newCard.balance" 
+              placeholder="Balance" 
+              class="text-black border-b rounded p-2" 
+              required
+            />
           </div>
           <div class="py-4">
             <button type="submit" class="bg-blue-500 text-white rounded px-4 py-2 mt-4">Add Card</button>
           </div>
-          </form>
+        </form>
+      </div>
+
+      <!-- Loading state -->
+      <div v-if="cardStore.loading" class="text-center p-4">
+        <p>Loading your cards...</p>
+      </div>
+
+      <!-- Error State -->
+      <div v-if="cardStore.error" class="text-center p-4 text-red-500">
+        <p>{{ cardStore.error }}</p>
       </div>
 
 
-      <div class="space-y-4">
-        <div v-for="(card, index) in cards" :key="index" class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4">
+      <div v-else-if="cardStore.cards.length" class="space-y-4">
+        <div 
+          v-for="(card, index) in cardStore.cards" 
+          :key="index" 
+          class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4"
+        >
           <div class="text-sm">Balance</div>
           <div class="text-xl font-bold mb-4 py-2">
             {{ card.balance }}
@@ -41,51 +80,68 @@
         </div>
       </div>
 
+      <!-- No Cards State -->
+      <div v-else class="text-center text-black p-4">
+        <p>No cards available. Add a new card to get started!</p>
+      </div>
+
     </div>
 </template>
 
 
 
-<script>
+<script setup>
   import { useCardStore } from '@/stores/cardStore';
+  import { ref, onMounted, onUnmounted } from 'vue';
+  import { useRouter } from 'vue-router';
 
-  export default {
-      name: 'MyCards',
+  const router = useRouter();
+  const cardStore = useCardStore();
 
-      data() {
-          return {
-            showForm: false,
-            // cards: [
-            //     { balance: '$1,250.00', number: '1234 1234 1234 1234', expiry: '12/26', cvv: '123' },
-            //     { balance: '$500.00', number: '5678 5678 5678 5678', expiry: '08/25', cvv: '456' },
-            //     { balance: '$3,150.00', number: '9012 9012 9012 9012', expiry: '01/28', cvv: '789' }
-            // ],
-            newCard: {
-                number: '',
-                expiry: '',
-                cvv: '',
-                balance: ''
-            },
-            cardStore: useCardStore(),
-          }
-      },
+  const showForm = ref(false);
+  const newCard = ref({
+    number: '',
+    expiry: '',
+    cvv: '',
+    balance: ''
+  });
 
-      mounted() {
-        this.cardStore.fetchCards();
-      },
+  let isMounted = true
 
-      methods: {
-        async handleAddCard() {
-          try {
-            await this.cardStore.addCard(this.form)
-            this.form = { number: '', balance: '', expiry: '', cvv: '' }
-            this.showForm = false
-          } catch (err) {
-            alert('Failed to add card. Please try again.')
-          }
-        },
-      },
-  }
+  onMounted(() => {
+    console.log('cardStore on mount:', cardStore)
+    console.log('cardStore.cards on mount:', cardStore.cards)
+    cardStore.fetchCards();
+  });
+
+  onUnmounted(() => {
+    isMounted = false
+  })
+
+  const handleAddCard = async () => {
+    try {
+      const success = await cardStore.addCard(newCard.value);
+      if(isMounted){
+      if(success){
+          newCard.value = { 
+            number: '', 
+            expiry: '', 
+            cvv: '', 
+            balance: '' };
+          showForm.value = false;
+        } else {
+          alert(`Failed to add card: ${cardStore.error}`) // Show specific error
+        }
+      }
+
+    } catch (err) {
+      if(isMounted){
+        console.error('Error in handleAddCard:', err)
+        alert(`Error adding card: ${err.message}`)
+        alert('Failed to add card. Please try again.');
+      }
+    }
+  };
 </script>
 
 
