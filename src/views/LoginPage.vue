@@ -53,7 +53,8 @@
 
 
 <script>
-  import { useAuthStore } from '@/stores/authStore'
+  import { useAuthStore } from '../stores/authStore'
+
 
   export default {
     name: 'Login',
@@ -63,14 +64,16 @@
         password: '',
       }
     },
+
     methods: {
-      handleLogin() {
+      async handleLogin() {
         if (!this.email || !this.password) {
           alert('Please enter both email and password.')
           return
         }
+        
         const authStore = useAuthStore()
-        const success = authStore.login(this.email, this.password)
+        const success = await authStore.login(this.email, this.password)
         if (success) {
           this.$router.push('/home')
         } else {

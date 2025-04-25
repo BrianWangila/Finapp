@@ -1,13 +1,31 @@
 <template>
     <div class="cards bg-white min-h-screen">
       
-        <header class="transactions-head bg-violet-100 text-center py-4 px-4 relative">
+      <header class="transactions-head bg-violet-100 text-center py-4 px-4 relative">
         <button @click="$router.go(-1)" class="text-gray-600 text-3xl">←</button>
         <h2 class="font-semibold text-lg text-gray-700">My Cards</h2>
         <div class="absolute right-4 top-4 relative">
-          <button class="add-card">+</button>
+          <button @click="showForm = !showForm" class="add-card">+</button>
         </div>
-        </header>
+      </header>
+
+
+      <!-- Add new card form -->
+      <div class="bg-white shadow-md rounded-lg p-4 mt-4">
+        <h3 class="text-lg font-semibold text-gray-700">Add New Card</h3>
+        <form @submit.prevent="handleAddCard">
+          <div class="grid grid-cols-2 gap-4 mt-4">
+            <input type="text" v-model="newCard.number" placeholder="Card Number" class="text-black border-b rounded p-2" required />
+            <input type="text" v-model="newCard.expiry" placeholder="Expiry Date (MM/YY)" pattern="\d{2}/\d{2}" class="text-black border-b rounded p-2" required />
+            <input type="text" v-model="newCard.cvv" placeholder="CVV (3 digits)" class="text-black border-b rounded p-2" required />
+            <input type="text" v-model="newCard.balance" placeholder="Balance" class="text-black border-b rounded p-2" required />
+          </div>
+          <div class="py-4">
+            <button type="submit" class="bg-blue-500 text-white rounded px-4 py-2 mt-4">Add Card</button>
+          </div>
+          </form>
+      </div>
+
 
       <div class="space-y-4">
         <div v-for="(card, index) in cards" :key="index" class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4">
@@ -29,19 +47,45 @@
 
 
 <script>
-    export default {
-        name: 'MyCards',
+  import { useCardStore } from '@/stores/cardStore';
 
-        data() {
-            return {
-            cards: [
-                { balance: '$1,250.00', number: '1234 1234 1234 1234', expiry: '12/26', cvv: '123' },
-                { balance: '$500.00', number: '5678 5678 5678 5678', expiry: '08/25', cvv: '456' },
-                { balance: '$3,150.00', number: '9012 9012 9012 9012', expiry: '01/28', cvv: '789' }
-            ]
-            }
-        }
-    }
+  export default {
+      name: 'MyCards',
+
+      data() {
+          return {
+            showForm: false,
+            // cards: [
+            //     { balance: '$1,250.00', number: '1234 1234 1234 1234', expiry: '12/26', cvv: '123' },
+            //     { balance: '$500.00', number: '5678 5678 5678 5678', expiry: '08/25', cvv: '456' },
+            //     { balance: '$3,150.00', number: '9012 9012 9012 9012', expiry: '01/28', cvv: '789' }
+            // ],
+            newCard: {
+                number: '',
+                expiry: '',
+                cvv: '',
+                balance: ''
+            },
+            cardStore: useCardStore(),
+          }
+      },
+
+      mounted() {
+        this.cardStore.fetchCards();
+      },
+
+      methods: {
+        async handleAddCard() {
+          try {
+            await this.cardStore.addCard(this.form)
+            this.form = { number: '', balance: '', expiry: '', cvv: '' }
+            this.showForm = false
+          } catch (err) {
+            alert('Failed to add card. Please try again.')
+          }
+        },
+      },
+  }
 </script>
 
 
@@ -67,6 +111,13 @@
     .cards .space-y-4 {
         margin-top: 10px;
         padding: 20px;
+    }
+
+    .input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
 
 </style>

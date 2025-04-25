@@ -7,7 +7,7 @@
         <form>
             <div class="mb-4">
                 <label class="block text-sm text-gray-600 mb-2">Username</label>
-                <input v-model="username" type="name" class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Username" />
+                <input v-model="username" type="text" class="text-black w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="Username" />
             </div>
 
             <div class="mb-4">
@@ -41,7 +41,7 @@
   import { useAuthStore } from '@/stores/authStore'
 
   export default {
-    name: 'SignUp',
+    name: 'SignupPage',
 
     data() {
       return {
@@ -53,8 +53,8 @@
     },
 
     methods: {
-      handleSignup() {
-        if (!this.email || !this.password || !this.confirmPassword) {
+      async handleSignup() {
+        if (!this.username || !this.email || !this.password || !this.confirmPassword) {
           alert('Please fill all fields')
           return
         }
@@ -66,8 +66,14 @@
 
         const authStore = useAuthStore()
 
-        authStore.signup(this.username, this.email, this.password)
-        this.$router.push('/login')
+        const success = await authStore.signup(this.username, this.email, this.password, this.confirmPassword)
+        
+        if (success) {
+          alert('Signup successful! Please login.')
+          this.$router.push('/login')
+        } else {
+          alert('Signup failed. Please try again.')
+        }
       }
     }
   }

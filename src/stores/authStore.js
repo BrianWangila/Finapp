@@ -1,18 +1,6 @@
 // stores/authStore.js
 import { defineStore } from 'pinia'
-import axios from 'axios'
-
-// Set the base URL for axios
-const api = axios.create({
-  baseURL: 'https://capitallandinvest.com/api/api',
-  // baseURL: 'https://api.capitallandinvest.com/api',
-  // baseURL: 'http://127.0.0.1:8000/api',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  },
-  
-})
+import api from '../api' 
 
 
 export const useAuthStore = defineStore('auth', {
@@ -24,70 +12,73 @@ export const useAuthStore = defineStore('auth', {
 
 
   actions: {
-        async signup(username, email, password) {
-            try {
-            const res = await api.post('/register', { username, email, password })
-            this.token = res.data.token
+        async signup(username, email, password, confirmPassword) {
+          try {
+            // await api.get('/sanctum/csrf-cookie') // CSRF protection
+            const res = await api.post('/api/register', {
+              username, 
+              email, 
+              password, 
+              password_confirmation: confirmPassword
+            })
             this.user = res.data.user
+            console.log('User data:', this.user)
+            this.token = res.data.token
+            console.log('User token:', this.token)
             this.isAuthenticated = true
             localStorage.setItem('token', this.token)
-            axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-            
-            } catch (err) {
-            console.error(err)
-            }
+            return true
+
+          } catch (err) {
+            console.error('Signup error', err)
+            return false
+          }
         },
 
         async login(email, password) {
             try {
-                const res = await api.post('/login', { email, password })
-                this.token = res.data.token
+                // await api.get('/sanctum/csrf-cookie') 
+                const res = await api.post('/api/login', { 
+                  email, 
+                  password })
                 this.user = res.data.user
+                console.log('User data:', this.user)
+                this.token = res.data.token
                 this.isAuthenticated = true
                 localStorage.setItem('token', this.token)
-                axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
                 return true
 
-                // this.router.push('/home') 
-
-            } catch (error) {
-                // console.error(err)
+            } catch (err) {
+                console.error('Login error', err)
                 return false
             }
-        
         },
 
         async logout() {
-            api.post('/logout')
-              .then(() => {
-                this.user = null
-                this.isAuthenticated = false
-                this.token = null
-                localStorage.removeItem('token')
-                delete axios.defaults.headers.common['Authorization']
-            })
-              .catch(error => {
-                console.error('Logout failed:', error)
-                // Still remove local data in case backend fails
-                this.user = null
-                this.isAuthenticated = false
-                this.token = null
-                localStorage.removeItem('token')
-                delete axios.defaults.headers.common['Authorization']
-            })
+            try {
+              await api.post('/api/logout')
+              this.user = null
+              this.token = null
+              this.isAuthenticated = false
+              localStorage.removeItem('token')
+
+            } catch (err) {
+              console.error('Logout error', err)
+            }
         },
 
-        // async checkAuth() {
-        //   if (!this.token) return
-        //   try {
-        //     api.defaults.headers.common['Authorization'] = `Bearer ${this.token}`
-        //     const response = await api.get('/user')
-        //     this.user = response.data
-        //     this.isAuthenticated = true
-        //   } catch (err) {
-        //     this.user = null
-        //     this.isAuthenticated = false
-        //   }
-        // }
+        async fetchUser() {
+          try {
+            const res = await api.get('/api/user')
+            this.user = res.data
+            this.isAuthenticated = true
+
+          } catch (err) {
+            this.user = null
+            this.token = null
+            this.isAuthenticated = false
+            localStorage.removeItem('token')
+          }
+        }
     }
 })
