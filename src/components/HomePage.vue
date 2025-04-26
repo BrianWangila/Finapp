@@ -7,10 +7,12 @@
             <h1 class="font-bold text-xl">Capital Land</h1>
             <div class="flex items-center gap-4">
                 <div class="relative">
-                  <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">4</span>
-                  <button>🔔</button>
+                  <router-link to="/notifications">
+                    <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">4</span>
+                    <button>🔔</button>
+                  </router-link>
                 </div>
-              <img src="https://i.pravatar.cc/32" class="rounded-full w-8 h-8" alt="User" />
+              <router-link to="/settings"><img src="https://i.pravatar.cc/32" class="rounded-full w-8 h-8" alt="User" /></router-link>
             </div>
         </header>
 

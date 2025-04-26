@@ -4,14 +4,13 @@
         <div class="w-4/5 max-w-xs bg-white h-full p-6 flex flex-col shadow-lg z-50">
           <!-- Profile -->
           <div class="flex items-center gap-4 mb-6">
-            <img src="https://i.pravatar.cc/80?img=14" class="w-14 h-14 rounded-full" />
+            <img :src="userAvatar" class="w-14 h-14 rounded-full" />
             <div>
               <div class="flex items-center gap-15">    
-                <p class="font-semibold text-lg text-black">John Doe</p>
+                <p class="font-semibold text-lg text-black">{{ username }}</p>
                 <button @click="$emit('close')" class="text-gray-600 text-xl">×</button>
               </div>
-              <p class="text-sm text-gray-400">#ID 007456</p>
-              
+              <p class="text-sm text-gray-400">#ID {{ idNumber }}</p>
             </div>
           </div>
   
@@ -54,7 +53,7 @@
             <div class="py-5">
               <p class="text-xs uppercase text-gray-400">Others</p>
               <ul class="space-y-2 text-sm">
-                <li><a href="#" class="text-gray-700 hover:text-violet-600">Settings</a></li>
+                <li><router-link to="/settings" class="text-gray-700 hover:text-violet-600">Settings</router-link></li>
                 <li><a href="#" class="text-gray-700 hover:text-violet-600">Support</a></li>
                 <li><button @click="logout" class="text-red-500 font-semibold">Log Out</button></li>
               </ul>
@@ -70,25 +69,55 @@
 
 
 
-<script>
-  import { useAuthStore } from '@/stores/authStore'
+<script setup>
+  import { ref, computed, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useAuthStore } from '@/stores/authStore';
+  import { useCardStore } from '@/stores/cardStore';
+  import axios from 'axios';
 
-  export default {
-      name: 'SideDrawer',
-      props: ['isOpen'],
-      
-      methods: {
-        closeDrawer() {
-          this.$emit('close')
-        },
-        logout() {
-          const authStore = useAuthStore()
-          authStore.logout()
-          this.$router.push('/login')
-        },
-      }
+  const props = defineProps(['isOpen']);
+  const emit = defineEmits(['close']);
+  const router = useRouter();
+  const authStore = useAuthStore();
+  const cardStore = useCardStore();
 
-  }
+  const userAvatar = ref('https://i.pravatar.cc/80?img=14'); // Placeholder avatar
+  const username = ref('John Doe');
+  const idNumber = ref('007456');
+
+  const totalBalance = computed(() => {
+    return cardStore.cards.reduce((sum, card) => sum + parseFloat(card.balance || 0), 0).toFixed(2);
+  });
+
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get('/api/user', { withCredentials: true });
+      username.value = response.data.username || 'John Doe';
+      idNumber.value = response.data.id_number || '007456';
+    } catch (err) {
+      console.error('Error fetching user:', err);
+    }
+  };
+
+  const closeDrawer = () => {
+    emit('close');
+  };
+
+  const logout = async () => {
+    try {
+      await authStore.logout();
+      router.push('/login');
+      emit('close');
+    } catch (err) {
+      console.error('Error logging out:', err);
+    }
+  };
+
+  onMounted(() => {
+    fetchUser();
+    cardStore.fetchCards();
+  });
 </script>
 
 

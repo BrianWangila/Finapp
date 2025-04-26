@@ -73,7 +73,9 @@ export const useTransactionStore = defineStore('transaction', {
         bankName: 'Chase Bank',
         category: 'E-commerce'
       }
-    ]
+    ],
+    loading: false,
+    error: null
   }),
 
 

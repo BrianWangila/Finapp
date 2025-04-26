@@ -7,6 +7,7 @@ import MyCards from '../components/MyCards.vue'
 import TransactionDetail from '../components/TransactionDetail.vue'
 import { useTransactionStore } from '../stores/transactionStore'
 import { useAuthStore } from '@/stores/authStore'
+import Settings from '../views/Settings.vue'
 
 
 const routes = [
@@ -16,7 +17,8 @@ const routes = [
   { path: '/home', component: HomePage, meta: { requiresAuth: true } },
   { path: '/transactions', component: AllTransactions, meta: { requiresAuth: true }},
   { path: '/my-cards', component: MyCards, meta: { requiresAuth: true } },
-  { path: '/transaction-detail/:id', component: TransactionDetail, meta: { requiresAuth: true } }
+  { path: '/transaction-detail/:id', component: TransactionDetail, meta: { requiresAuth: true } },
+  { path: '/settings', component: Settings, meta: { requiresAuth: true }},
 ]
 
 
@@ -34,7 +36,7 @@ router.beforeEach(async (to, from, next) => {
   
   if(to.meta.requiresAuth && !authStore.isAuthenticated) {
     next({ path: '/login' })
-    
+
   } else if (to.path === '/login' && authStore.isAuthenticated) {
     next({ path: '/home' })
 
