@@ -5,9 +5,9 @@ import HomePage from '../components/HomePage.vue'
 import SignupPage from '../views/SignupPage.vue'
 import MyCards from '../components/MyCards.vue'
 import TransactionDetail from '../components/TransactionDetail.vue'
-import { useTransactionStore } from '../stores/transactionStore'
 import { useAuthStore } from '@/stores/authStore'
 import Settings from '../views/Settings.vue'
+import Notifications from '@/components/Notifications.vue'
 
 
 const routes = [
@@ -17,8 +17,9 @@ const routes = [
   { path: '/home', component: HomePage, meta: { requiresAuth: true } },
   { path: '/transactions', component: AllTransactions, meta: { requiresAuth: true }},
   { path: '/my-cards', component: MyCards, meta: { requiresAuth: true } },
-  { path: '/transaction-detail/:id', component: TransactionDetail, meta: { requiresAuth: true } },
+  { path: '/transaction-detail/:id', name: 'TransactionDetail', component: TransactionDetail, meta: { requiresAuth: true } },
   { path: '/settings', component: Settings, meta: { requiresAuth: true }},
+  { path: '/notifications', component: Notifications, meta: { requiresAuth: true }},
 ]
 
 

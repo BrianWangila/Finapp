@@ -5,30 +5,33 @@
         <button @click="$router.go(-1)" class="text-gray-600 text-3xl">←</button>
         <h2 class="font-semibold text-lg text-gray-700">Transactions</h2>
         <div class="absolute right-4 top-4 relative">
-          <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">4</span>
+          <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+            {{ notificationCount }}
+          </span>
           <button>🔔</button>
         </div>
       </header>
   
       <!-- Transaction List -->
-      <div class="p-4 space-y-6 flex-grow">
-        <div>
-          <div class="space-y-3">
-            <TransactionItem 
-              v-for="(transaction, index) in allTransactions"
-              :key="index"
-              class="transaction-item" 
-              :name="transaction.name"
-              :type="transaction.type"
-              :logo="transaction.logo"
-              :amount="transaction.amount"
-              :negative="transaction.negative"
-              @click="viewTransactionDetail(transaction)"
-              
-              />
-          </div>
+      <div class="transactions-list p-4 space-y-6 flex-grow">
+        <div v-if="transactionStore.loading" class="text-center p-4">
+          <p>Loading transactions...</p>
         </div>
-  
+
+        <div v-else-if="transactionStore.error" class="text-center p-4 text-red-500">
+          <p>{{ transactionStore.error }}</p>
+        </div>
+
+        <div v-else-if="allTransactions.length" class="list-card space-y-3 py-3">
+          <TransactionItem
+            v-for="transaction in allTransactions"
+            :key="transaction.id"
+            v-bind="transaction"
+          />
+        </div>
+        <div v-else class="text-center p-4">
+          <p>No transactions available.</p>
+        </div>
       </div>
   
     </div>
@@ -36,42 +39,32 @@
   
 
 
-<script>
-  import TransactionItem from '../components/TransactionItem.vue'
-  import { useTransactionStore } from '../stores/transactionStore'
-  import { mapState } from 'pinia'
-  
-  export default {
-    name: 'AllTransactions',
-    
-    components: {
-      TransactionItem
-    },
+<script setup>
+  import { computed, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useTransactionStore } from '../stores/transactionStore';
+  import { useNotificationStore } from '../stores/notificationStore';
+  import TransactionItem from '../components/TransactionItem.vue';
 
-    setup() {
-      const store = useTransactionStore()
-      const viewTransactionDetail = (transaction) => {
-        store.selectTransaction(transaction)
-        window.location.href = `/transaction-detail/${transaction.id}`
-      }
+  const router = useRouter();
+  const transactionStore = useTransactionStore();
+  const notificationStore = useNotificationStore();
 
-      return {
-        allTransactions: store.allTransactions,
-        viewTransactionDetail
-      }
-    },
+  const allTransactions = computed(() => {
+    console.log('allTransactions:', transactionStore.allTransactions);
+    return transactionStore.allTransactions
+  });
+  const notificationCount = computed(() => notificationStore.notificationCount);
 
-    computed: {
-      ...mapState(useTransactionStore, ['allTransactions']),
-     
-    },
+  const viewTransactionDetail = (transaction) => {
+    transactionStore.selectTransaction(transaction);
+    router.push({ name: 'TransactionDetail', params: { id: transaction.id } });
+  };
 
-    methods: {
-      viewTransactionDetail(transaction) {
-        this.$router.push({ name: 'TransactionDetail', params: { id: transaction.id } })
-      }
-    }
-  }
+  onMounted(() => {
+    transactionStore.fetchTransactions();
+    notificationStore.fetchNotifications();
+  });
 </script>
 
 
@@ -87,5 +80,7 @@
     justify-content: space-between;
 
   }
+
+  
   
 </style>

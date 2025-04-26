@@ -56,6 +56,22 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
+        async googleLogin(idToken) {
+          try {
+            const res = await api.post('/api/google-login', { id_token: idToken });
+            this.user = res.data.user;
+            this.token = res.data.token;
+            this.isAuthenticated = true;
+            localStorage.setItem('user', JSON.stringify(this.user));
+            localStorage.setItem('token', this.token);
+            localStorage.setItem('isAuthenticated', 'true');
+            return true;
+          } catch (err) {
+            console.error('Google login error:', err.response?.data || err.message);
+            return false;
+          }
+        },
+
         async logout() {
             try {
               await api.post('/api/logout')
@@ -74,6 +90,7 @@ export const useAuthStore = defineStore('auth', {
         async fetchUser() {
           try {
             const res = await api.get('/api/user')
+            console.log('Fetched user data:', res.data);
             this.user = res.data
             this.isAuthenticated = true
             localStorage.setItem('user', JSON.stringify(this.user))

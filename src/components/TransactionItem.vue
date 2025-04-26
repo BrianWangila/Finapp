@@ -7,7 +7,7 @@
         <p class="text-sm text-gray-500">{{ type }}</p>
       </div>
       <div :class="negative ? 'text-red-500' : 'text-green-500'" class="font-semibold">
-        {{ amount }}
+        Ksh. {{ formatNumberWithCommas(amount) }}
       </div>
     </div>
   <!-- </router-link> -->
@@ -15,35 +15,42 @@
 
 
 
-<script>
+<script setup>
   import { useRouter } from 'vue-router'
   import { useTransactionStore } from '../stores/transactionStore'
+  import { formatNumberWithCommas } from '@/formatNumbers'
 
-  export default {
-    name: 'TransactionItem',
 
-    props: {
-      logo: String,
-      name: String,
-      type: String,
-      amount: String,
-      negative: Boolean,
-      transactionData: Object,
-    },
+  const props = defineProps ({
+    id: Number,
+    logo: String,
+    name: String,
+    type: String,
+    amount: [String, Number],
+    negative: Boolean,
+  });
+    
+  const router = useRouter();
+  const transactionStore = useTransactionStore();
 
-    setup(props){
-      const router = useRouter()
-      const transactionStore = useTransactionStore()
-
-      const goToDetail = () => {
-        transactionStore.setTransaction(props.transactionData)
-        router.push( '/transaction-detail' )
-      }
-
-      return {
-        goToDetail
-      }
+  const goToDetail = () => {
+    const transaction = transactionStore.allTransactions.find(t => t.id === props.id);
+    if (!transaction) {
+      console.error('Transaction not found for ID:', props.id);
+      return;
     }
-  }
+    transactionStore.selectTransaction(transaction);
+    router.push({ name: 'TransactionDetail', params: { id: props.id } });
+  };
 </script>
   
+
+<style scoped>
+  .cursor-pointer {
+    margin-bottom: 0.8rem;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+</style>

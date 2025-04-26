@@ -7,10 +7,10 @@
             <img :src="userAvatar" class="w-14 h-14 rounded-full" />
             <div>
               <div class="flex items-center gap-15">    
-                <p class="font-semibold text-lg text-black">{{ username }}</p>
+                <p class="font-semibold text-lg text-black">{{ authStore.user?.username }}</p>
                 <button @click="$emit('close')" class="text-gray-600 text-xl">×</button>
               </div>
-              <p class="text-sm text-gray-400">#ID {{ idNumber }}</p>
+              <p class="text-sm text-gray-400">#ID {{ authStore.user?.id_number }}</p>
             </div>
           </div>
   
@@ -18,23 +18,23 @@
           <div class="bg-white rounded-2xl p-6 shadow-md space-y-4">
             <div>
               <p class="text-gray-500">Balance</p>
-              <h2 class="text-3xl font-bold text-black">$2,562.50</h2>
+              <h2 class="text-2xl font-bold text-black">{{ formatNumberWithCommas(totalBalance) }}</h2>
             </div>
             <div class="grid grid-cols-4 gap-3 text-center text-yellow-500 py-3">
               <div class="space-y-1">
-                <button class="bg-pink-500 text-white p-2 rounded-full text-xl">⬇️</button>
+                <button @click="$emit('open-deposit')" class="bg-pink-500 text-white p-2 rounded-full text-xl">⬇️</button>
                 <p>Deposit</p>
               </div>
               <div class="space-y-1">
-                <button class="bg-indigo-500 text-white p-2 rounded-full text-xl">➡️</button>
+                <button @click="$emit('open-send')" class="bg-indigo-500 text-white p-2 rounded-full text-xl">➡️</button>
                 <p>Send</p>
               </div>
               <div class="space-y-1">
-                <button class="bg-green-500 text-white p-2 rounded-full text-xl">💳</button>
+                <button @click="$emit('open-cards')" class="bg-green-500 text-white p-2 rounded-full text-xl">💳</button>
                 <p>Cards</p>
               </div>
               <div class="space-y-1">
-                <button class="bg-yellow-400 text-white p-2 rounded-full text-xl">🔁</button>
+                <button @click="$emit('open-withdraw')" class="bg-yellow-400 text-white p-2 rounded-full text-xl">🔁</button>
                 <p>Withdraw</p>
               </div>
             </div>
@@ -75,9 +75,13 @@
   import { useAuthStore } from '@/stores/authStore';
   import { useCardStore } from '@/stores/cardStore';
   import axios from 'axios';
+  import { formatNumberWithCommas } from '@/formatNumbers';
 
-  const props = defineProps(['isOpen']);
-  const emit = defineEmits(['close']);
+
+  const props = defineProps({
+    isOpen: Boolean,
+  });
+  const emit = defineEmits(['close', 'open-send', 'open-withdraw', 'open-deposit', 'open-cards']);
   const router = useRouter();
   const authStore = useAuthStore();
   const cardStore = useCardStore();
@@ -89,16 +93,6 @@
   const totalBalance = computed(() => {
     return cardStore.cards.reduce((sum, card) => sum + parseFloat(card.balance || 0), 0).toFixed(2);
   });
-
-  const fetchUser = async () => {
-    try {
-      const response = await axios.get('/api/user', { withCredentials: true });
-      username.value = response.data.username || 'John Doe';
-      idNumber.value = response.data.id_number || '007456';
-    } catch (err) {
-      console.error('Error fetching user:', err);
-    }
-  };
 
   const closeDrawer = () => {
     emit('close');
@@ -115,7 +109,6 @@
   };
 
   onMounted(() => {
-    fetchUser();
     cardStore.fetchCards();
   });
 </script>

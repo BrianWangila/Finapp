@@ -4,7 +4,7 @@
       <header class="bg-violet-100 px-4 py-4 flex items-center justify-between">
         <button @click="$router.go(-1)" class="text-gray-600 text-2xl">←</button>
         <h2 class="text-lg font-semibold text-gray-700">Transaction Detail</h2>
-        <button class="text-red-500 text-xl">🗑️</button>
+        <button @click="deleteTransaction" class="text-red-500 text-xl">🗑️</button>
       </header>
   
       <!-- Transaction Detail Card -->
@@ -35,7 +35,7 @@
               <span class="font-semibold">Date:</span> {{ transaction.date }}
             </div>
             <div class="text-lg font-bold" :class="transaction.negative ? 'text-red-500' : 'text-green-500'">
-              {{ transaction.amount }}
+              Ksh. {{ transaction.amount }}
             </div>
           </div>
         </div>
@@ -45,27 +45,39 @@
 
 
 
-<script>
-    import { useTransactionStore } from '../stores/transactionStore'
-    import { useRoute } from 'vue-router'
-    import { computed } from 'vue'
+<script setup>
+  import { computed, onMounted } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import { useTransactionStore } from '../stores/transactionStore';
 
+  const route = useRoute();
+  const router = useRouter();
+  const transactionStore = useTransactionStore();
 
+  const goToDetail = () => {
+  const transaction = transactionStore.allTransactions.find(t => t.id === props.id);
+  transactionStore.selectTransaction(transaction);
+  router.push({ name: 'TransactionDetail', params: { id: props.id } });
+};
+  const transaction = computed(() => {
+    return transactionStore.allTransactions.find(t => t.id === parseInt(route.params.id));
+  });
 
-    export default {
-    name: 'TransactionDetail',
-    
-    setup(){
-        const store = useTransactionStore()
-        const route = useRoute()
+  const deleteTransaction = async () => {
+    try {
+      await axios.delete(`/api/transactions/${route.params.id}`);
+      transactionStore.fetchTransactions();
+      router.push('/transactions');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to delete transaction');
+    }
+  };
 
-        const transaction = computed(() => {
-            return store.allTransactions.find(t => t.id === parseInt(route.params.id))
-        })
-        return { transaction }
-    },
-
-}
+  onMounted(() => {
+    if (!transaction.value) {
+      transactionStore.fetchTransactions();
+    }
+  });
 </script>
 
 

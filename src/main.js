@@ -21,16 +21,18 @@ const authStore = useAuthStore()
 
 // authStore.checkAuth()
 
-if (localStorage.getItem('auth') === 'true') {
-    axios.get('/api/user')
-      .then(res => {
-        auth.user = res.data
-        auth.isAuthenticated = true
-      })
-      .catch(() => {
-        auth.logout()
-      })
-  }
+// if (localStorage.getItem('auth') === 'true') {
+//     axios.get('/api/user')
+//       .then(res => {
+//         auth.user = res.data
+//         auth.isAuthenticated = true
+//       })
+//       .catch(() => {
+//         auth.logout()
+//       })
+//   }
   
 
-app.mount('#app')
+authStore.restoreAuthState().then(() => {
+  app.mount('#app');
+});

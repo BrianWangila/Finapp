@@ -181,7 +181,7 @@
   
   const fetchUser = async () => {
     try {
-      const response = await axios.get('/api/user', { withCredentials: true });
+      const response = await axios.get('/api/user');
       form.value.username = response.data.username;
       form.value.email = response.data.email;
     } catch (err) {
@@ -191,7 +191,7 @@
   
   const updateUsername = async () => {
     try {
-      await axios.put('/api/profile', { username: form.value.username }, { withCredentials: true });
+      await axios.put('/api/profile', { username: form.value.username });
       showUsernameModal.value = false;
       alert('Username updated successfully');
     } catch (err) {
@@ -201,7 +201,7 @@
   
   const updateEmail = async () => {
     try {
-      await axios.put('/api/profile', { email: form.value.email }, { withCredentials: true });
+      await axios.put('/api/profile', { email: form.value.email });
       showEmailModal.value = false;
       alert('Email updated successfully');
     } catch (err) {
@@ -214,7 +214,7 @@
       await axios.put('/api/profile', {
         password: form.value.password,
         password_confirmation: form.value.password_confirmation,
-      }, { withCredentials: true });
+      });
       showPasswordModal.value = false;
       form.value.password = '';
       form.value.password_confirmation = '';

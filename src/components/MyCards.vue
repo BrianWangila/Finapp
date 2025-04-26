@@ -37,13 +37,6 @@
               class="text-black border-b rounded p-2" 
               required
             />
-            <input 
-              type="text" 
-              v-model="newCard.balance" 
-              placeholder="Balance" 
-              class="text-black border-b rounded p-2" 
-              required
-            />
           </div>
           <div class="py-4">
             <button type="submit" class="bg-blue-500 text-white rounded px-4 py-2 mt-4">Add Card</button>
@@ -70,9 +63,9 @@
         >
           <div class="text-sm">Balance</div>
           <div class="text-xl font-bold mb-4 py-2">
-            {{ card.balance }}
+            {{ formatNumberWithCommas(card.balance) }}
           </div>
-          <div class="text-sm tracking-widest py-2">{{ card.number }}</div>
+          <div class="text-sm tracking-widest py-2">{{ formatCardNumber(card.number) }}</div>
           <div class="flex justify-between text-xs mt-2">
             <span>EXP: {{ card.expiry }}</span>
             <span>CVV: {{ card.cvv }}</span>
@@ -94,6 +87,7 @@
   import { useCardStore } from '@/stores/cardStore';
   import { ref, onMounted, onUnmounted } from 'vue';
   import { useRouter } from 'vue-router';
+  import { formatNumberWithCommas } from '@/formatNumbers';
 
   const router = useRouter();
   const cardStore = useCardStore();
@@ -103,20 +97,24 @@
     number: '',
     expiry: '',
     cvv: '',
-    balance: ''
   });
 
   let isMounted = true
 
-  onMounted(() => {
-    console.log('cardStore on mount:', cardStore)
-    console.log('cardStore.cards on mount:', cardStore.cards)
+  onMounted(() => {    
     cardStore.fetchCards();
   });
 
   onUnmounted(() => {
     isMounted = false
   })
+
+  const formatCardNumber = (number) => {
+    // Format the card number to be more readable
+    return number.replace(/\B(?=(\d{4})+(?!\d))/g, ' ');
+  };
+  // const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
 
   const handleAddCard = async () => {
     try {
@@ -126,8 +124,8 @@
           newCard.value = { 
             number: '', 
             expiry: '', 
-            cvv: '', 
-            balance: '' };
+            cvv: '',
+          };
           showForm.value = false;
         } else {
           alert(`Failed to add card: ${cardStore.error}`) // Show specific error

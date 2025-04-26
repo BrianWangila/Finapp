@@ -5,40 +5,35 @@
         <router-link to="/transactions" class="text-sm text-violet-600">View All</router-link>
       </div>
   
-      <div class="space-y-4 ">
-
+      <div v-if="transactions.length" class="space-y-4 ">
         <TransactionItem 
           v-for="tx in transactions"
           :key="tx.id"
           class="transaction-item"
           v-bind="tx"
-
         />
+      </div>
+
+      <div v-else class="text-center p-4">
+        <p>No recent transactions.</p>
       </div>
     </div>
 </template>
   
 
 
-<script>
-  import TransactionItem from './TransactionItem.vue'
-  import { useTransactionStore } from '../stores/transactionStore'
+<script setup>
+  import { computed, onMounted } from 'vue';
+  import { useTransactionStore } from '../stores/transactionStore';
+  import TransactionItem from './TransactionItem.vue';
 
+  const transactionStore = useTransactionStore();
 
-  export default {
-    name: 'TransactionList',
+  const transactions = computed(() => transactionStore.allTransactions.slice(0, 3));
 
-    components: {
-      TransactionItem
-    },
-
-    computed: {
-      transactions(){
-        const store = useTransactionStore()
-        return store.allTransactions.slice(0, 3)
-      }
-    }
-  }
+  onMounted(() => {
+    transactionStore.fetchTransactions();
+  });
 </script>
 
 

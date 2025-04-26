@@ -1,79 +1,12 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import axios from 'axios'
+import api from '@/api' // Adjust the import based on your project structure
 
 
 export const useTransactionStore = defineStore('transaction', {
   state: () => ({
     selectedTransaction: null,
-    // allTransactions: []
-    allTransactions: [
-      {
-        id: 1,
-        name: 'Amazon',
-        type: 'Shopping',
-        logo: 'https://logo.clearbit.com/amazon.com',
-        amount: '- $150',
-        negative: true,
-        date: '2025-04-22',
-        status: 'Completed',
-        to: 'Amazon Inc.',
-        bankName: 'Chase Bank',
-        category: 'E-commerce'
-      },
-      {
-        id: 2,
-        name: 'Apple',
-        type: 'Appstore Purchase',
-        logo: 'https://logo.clearbit.com/apple.com',
-        amount: '- $29',
-        negative: true,
-        date: '2025-04-22',
-        status: 'Completed',
-        to: 'Apple Services',
-        bankName: 'Bank of America',
-        category: 'Digital Services'
-      },
-      {
-        id: 3,
-        name: 'Alex Ljung',
-        type: 'Transfer',
-        logo: 'https://i.pravatar.cc/40?img=10',
-        amount: '+ $1,000',
-        negative: false,
-        date: '2025-04-22',
-        status: 'Pending',
-        to: 'Alex Ljung',
-        bankName: 'Wells Fargo',
-        category: 'Transfer'
-      },
-      {
-        id: 4,
-        name: 'Beatriz Brito',
-        type: 'Transfer',
-        logo: 'https://i.pravatar.cc/40?img=12',
-        amount: '- $186',
-        negative: true,
-        date: '2025-04-22',
-        status: 'Failed',
-        to: 'Beatriz Brito',
-        bankName: 'Citibank',
-        category: 'Transfer'
-      },
-      {
-        id: 5,
-        name: 'Amazon',
-        type: 'Shopping',
-        logo: 'https://logo.clearbit.com/amazon.com',
-        amount: '- $150',
-        negative: true,
-        date: '2025-04-21',
-        status: 'Completed',
-        to: 'Amazon Inc.',
-        bankName: 'Chase Bank',
-        category: 'E-commerce'
-      }
-    ],
+    allTransactions: [],
     loading: false,
     error: null
   }),
@@ -81,31 +14,55 @@ export const useTransactionStore = defineStore('transaction', {
 
   actions: {
     async fetchTransactions() {
+      this.loading = true
+      this.error = null
       try {
-        const response = await axios.get('http://localhost:8000/api/transactions')
-        withCredentials: true,
-        this.allTransactions = response.data
+        const res = await api.get('/api/transactions')
+        this.allTransactions = res.data
       } catch (error) {
-        console.error('Error fetching transactions:', error)
+        this.error = err.response?.data?.message || 'Failed to fetch transactions';
+      }
+      finally {
+        this.loading = false
       }
     },
 
-    async createTransaction(data) {
+    async sendTransaction(data) {
       try {
-        const res = await axios.post('http://localhost:8000/api/transactions', data)
-        this.allTransactions.unshift(res.data)
+        const response = await api.post('/api/transactions/send', data);
+        this.allTransactions.unshift(response.data);
       } catch (err) {
-        console.error(err)
+        throw new Error(err.response?.data?.message || 'Failed to send money');
       }
     },
 
-    setTransaction(transaction) {
-      this.selectedTransaction = transaction
+    async withdrawToMpesa(data) {
+      try {
+        const response = await api.post('/api/transactions/withdraw', data);
+        this.allTransactions.unshift(response.data);
+      } catch (err) {
+        throw new Error(err.response?.data?.message || 'Failed to withdraw to MPESA');
+      }
     },
 
-    clearTransaction() {
-      this.selectedTransaction = null
+    async deposit(data) {
+      try {
+        const response = await api.post('/api/transactions/deposit', data);
+        this.allTransactions.unshift(response.data);
+      } catch (err) {
+        throw new Error(err.response?.data?.message || 'Failed to deposit');
+      }
     },
+
+
+    // setTransaction(transaction) {
+    //   this.selectedTransaction = transaction
+    // },
+
+    // clearTransaction() {
+    //   this.selectedTransaction = null
+    // },
+
 
     selectTransaction(transaction) {
       this.selectedTransaction = transaction
