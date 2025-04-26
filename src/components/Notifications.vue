@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-100">
+    <div class="notifications-main min-h-screen bg-gray-100">
       <!-- Header -->
       <header class="bg-violet-100 px-4 py-4 flex items-center justify-between">
         <button @click="$router.go(-1)" class="text-gray-600 text-2xl">←</button>
@@ -8,41 +8,43 @@
       </header>
   
       <!-- Loading State -->
-      <div v-if="notificationStore.loading" class="text-center p-4">
-        <p>Loading notifications...</p>
-      </div>
-  
-      <!-- Error State -->
-      <div v-if="notificationStore.error" class="text-center p-4 text-red-500">
-        <p>{{ notificationStore.error }}</p>
-      </div>
-  
-      <!-- Notifications List -->
-      <div v-else-if="notifications.length" class="p-4 space-y-4">
-        <div
-          v-for="notification in notifications"
-          :key="notification.id"
-          class="bg-white p-4 rounded-xl shadow flex justify-between items-center"
-          :class="{ 'opacity-50': notification.is_read }"
-        >
-          <div>
-            <p class="font-semibold text-gray-800">{{ notification.message }}</p>
-            <p class="text-sm text-gray-500">{{ formatDate(notification.created_at) }}</p>
-          </div>
-          <button
-            v-if="!notification.is_read"
-            @click="markAsRead(notification.id)"
-            class="text-blue-500 text-sm"
-          >
-            Mark as Read
-          </button>
+      <main>
+        <div v-if="notificationStore.loading" class="text-center p-4">
+          <p>Loading notifications...</p>
         </div>
-      </div>
-  
-      <!-- No Notifications State -->
-      <div v-else class="text-center p-4 text-gray-600">
-        <p>No notifications available.</p>
-      </div>
+    
+        <!-- Error State -->
+        <div v-if="notificationStore.error" class="text-center p-4 text-red-500">
+          <p>{{ notificationStore.error }}</p>
+        </div>
+    
+        <!-- Notifications List -->
+        <div v-else-if="notifications.length" class="p-4 space-y-4">
+          <div
+            v-for="notification in notifications"
+            :key="notification.id"
+            class="messages bg-white p-4 rounded-xl shadow flex justify-between items-center"
+            :class="{ 'opacity-50': notification.is_read }"
+          >
+            <div>
+              <p class="font-semibold text-gray-800">{{ notification.message }}</p>
+              <p class="text-sm text-gray-500">{{ formatDate(notification.created_at) }}</p>
+            </div>
+            <button
+              v-if="!notification.is_read"
+              @click="markAsRead(notification.id)"
+              class="text-blue-500 text-sm"
+            >
+              Mark as Read
+            </button>
+          </div>
+        </div>
+    
+        <!-- No Notifications State -->
+        <div v-else class="text-center p-4 text-gray-600">
+          <p>No notifications available.</p>
+        </div>
+      </main>
     </div>
   </template>
   
@@ -82,4 +84,28 @@
   .opacity-50 {
     opacity: 0.5;
   }
+
+
+
+  @media (min-width: 1025px) {
+  
+  .notifications-main{
+    width: 80rem;
+    margin-right: 2rem;
+    margin: auto;
+  }
+
+  .notifications-main main {
+    width: 70rem;
+    padding-top: 1rem;
+    margin: auto;
+  }
+
+  .notifications-main .messages {
+    margin-bottom: 1rem;
+    
+  }
+
+
+}
   </style>

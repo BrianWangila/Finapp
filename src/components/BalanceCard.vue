@@ -5,8 +5,8 @@
         <p class="text-gray-500">Total Balance</p>
         <h2 class="text-2xl font-bold text-black">Ksh. {{ formatNumberWithCommas(totalBalance) }}</h2>
       </div>
-      <div class="deposit-button">
-        <button @click="$emit('deposit')" class="">&plus;</button>
+      <div @click="$emit('deposit')" class="deposit-button">
+        <button class=""><i class="fa-solid fa-plus"></i></button>
       </div>
     </div>
     <hr class="border-gray-200" />
@@ -16,11 +16,11 @@
         <p>Withdraw</p>
       </div>
       <div class="space-y-1">
-        <button @click="$emit('send')" class="bg-indigo-500 text-white p-2 rounded text-xl">➡️</button>
+        <button @click="$emit('send')" class="bg-indigo-500 text-white p-2 rounded text-xl"><i class="fa-regular fa-paper-plane"></i></button>
         <p>Send</p>
       </div>
       <div class="space-y-1">
-        <button @click="$emit('cards')" class="bg-green-500 text-white p-2 rounded text-xl">💳</button>
+        <button @click="$emit('cards')" class="bg-green-500 text-white p-2 rounded text-xl"><i class="fa-regular fa-credit-card"></i></button>
         <p>Cards</p>
       </div>
       <div class="space-y-1">

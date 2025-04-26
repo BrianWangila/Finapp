@@ -10,16 +10,28 @@ import Settings from '../views/Settings.vue'
 import Notifications from '@/components/Notifications.vue'
 
 
+// const routes = [
+//   { path: '/', redirect: '/login' },
+//   { path: '/login', component: LoginPage },
+//   { path: '/signup', component: SignupPage },
+//   { path: '/home', component: HomePage, meta: { requiresAuth: true } },
+//   { path: '/transactions', component: AllTransactions, meta: { requiresAuth: true } },
+//   { path: '/my-cards', component: MyCards, meta: { requiresAuth: true } },
+//   { path: '/transaction-detail/:id', name: 'TransactionDetail', component: TransactionDetail, meta: { requiresAuth: true } },
+//   { path: '/settings', component: Settings, meta: { requiresAuth: true } },
+//   { path: '/notifications', component: Notifications, meta: { requiresAuth: true } },
+// ]
+
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', component: LoginPage },
   { path: '/signup', component: SignupPage },
-  { path: '/home', component: HomePage, meta: { requiresAuth: true } },
-  { path: '/transactions', component: AllTransactions, meta: { requiresAuth: true }},
-  { path: '/my-cards', component: MyCards, meta: { requiresAuth: true } },
-  { path: '/transaction-detail/:id', name: 'TransactionDetail', component: TransactionDetail, meta: { requiresAuth: true } },
-  { path: '/settings', component: Settings, meta: { requiresAuth: true }},
-  { path: '/notifications', component: Notifications, meta: { requiresAuth: true }},
+  { path: '/home', component: HomePage },
+  { path: '/transactions', component: AllTransactions },
+  { path: '/my-cards', component: MyCards },
+  { path: '/transaction-detail/:id', name: 'TransactionDetail', component: TransactionDetail },
+  { path: '/settings', component: Settings },
+  { path: '/notifications', component: Notifications },
 ]
 
 

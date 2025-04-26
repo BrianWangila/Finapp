@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-100 flex flex-col font-sans">
+    <div class="settings-main min-h-screen bg-gray-100 flex flex-col font-sans">
       <!-- Header -->
       <header class="bg-violet-100 text-center py-4 px-4 relative flex items-center justify-between">
         <button @click="$router.go(-1)" class="text-gray-600 text-3xl">←</button>
@@ -22,7 +22,7 @@
             <img :src="userAvatar" alt="User Avatar" class="w-24 h-24 rounded-full" />
             <button class="absolute bottom-0 right-0 bg-violet-600 text-white rounded-full p-2">📷</button>
           </div>
-          <p class="mt-2 text-gray-700 py-1">ID: {{ userIdNumber }}</p>
+          <p class="id-number mt-2 text-gray-900 py-3 font-bold">ID: {{ userIdNumber }}</p>
         </div>
   
         <!-- Theme Section (non-interactive) -->
@@ -38,7 +38,7 @@
         <section>
           <h3 class="text-gray-700 font-semibold mb-2 py-2">Notifications</h3>
           <div class="bg-white p-4 rounded-lg shadow space-y-4">
-            <div class="flex justify-between items-center py-1">
+            <div class="flex justify-between items-center py-2">
               <div>
                 <p>Payment Alert</p>
                 <p class="text-gray-400 text-sm">Send notification when new payment is received</p>
@@ -46,12 +46,12 @@
               <input type="checkbox" disabled />
             </div>
             <hr class="text-gray-200" />
-            <div class="flex justify-between items-center py-1">
+            <div class="flex justify-between items-center py-2">
               <div>
                 <p>Notification Sound</p>
                 <p class="text-gray-400 text-sm">Beep</p>
               </div>
-              <span class="text-gray-400">➡️</span>
+              <span class="text-gray-400"></span>
             </div>
           </div>
         </section>
@@ -59,7 +59,7 @@
         <!-- Profile Settings Section (interactive) -->
         <section>
           <h3 class="text-gray-700 font-semibold mb-2 py-2">Profile Settings</h3>
-          <div class="bg-white p-4 rounded-lg shadow space-y-4">
+          <div class="profile-settings bg-white p-4 rounded-lg shadow space-y-4">
             
             <!-- Change Username -->
             <div class="flex justify-between items-center py-1">
@@ -96,14 +96,14 @@
           <div class="bg-white p-4 rounded-lg shadow space-y-4">
             <!-- Update Password (already handled above) -->
             <!-- 2 Step Verification (non-interactive) -->
-            <div class="flex justify-between items-center py-1">
+            <div class="flex justify-between items-center py-2">
               <span>2 Step Verification</span>
               <input type="checkbox" disabled checked />
             </div>
             <hr class="text-gray-200" />
 
             <!-- Log out all devices -->
-            <div class="flex justify-between items-center py-1">
+            <div class="flex justify-between items-center py-3">
               <button @click="handleLogout" class="text-red-500">Log out all devices</button>
             </div>
           </div>
@@ -279,5 +279,38 @@
   .slide-up-enter-from,
   .slide-up-leave-to {
     transform: translateY(100%);
+  }
+
+  .settings-main .id-number {
+    font-weight: 600;
+  }
+
+  main h3 {
+    font-size: 1.1rem;
+    margin-top: 0.7rem;
+
+  }
+
+  .profile-settings span {
+    font-size: 1rem;
+    margin-top: 0.9rem;
+  }
+
+
+
+  @media (min-width: 1025px) {
+  
+    .settings-main{
+      width: 80rem;
+      margin: auto;
+      margin-right: 2rem;
+    }
+
+    .settings-main main {
+      width: 70rem;
+      margin: auto;
+    }
+
+
   }
   </style>

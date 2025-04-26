@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-100 font-sans">
+    <div class="main-screen bg-gray-100 font-sans">
         <!-- Top Bar -->
         <header class="bg-violet-600 text-white p-4 flex items-center justify-between">
             <button @click="openDrawer" class="text-2xl">&#9776;</button>
@@ -19,7 +19,7 @@
 
 
       <!-- Main Content -->
-      <main class="p-4 space-y-6">
+      <main class="main-content p-4 space max-w-4xl mx-auto">
         <BalanceCard 
             @withdraw="showWithdrawModal = true"
             @send="showSendModal = true"
@@ -30,6 +30,7 @@
         <SummaryCards class="py-5"/>
         <TransactionList />
 
+        
         <SidebarDrawer 
           :is-open="isDrawerOpen" 
           @close="isDrawerOpen = false"
@@ -46,7 +47,7 @@
                 <router-link to="/my-cards" class="text-blue-600 text-sm">View all</router-link>
             </div>
             <div class="overflow-x-auto py-2">
-              <div v-if="cardStore.loading" class="text-center p-4">
+              <div v-if="cardStore.loading" class="text-center p-4 text-gray-500">
                 <p>Loading cards...</p>
               </div>
 
@@ -54,17 +55,24 @@
                 <p>{{ cardStore.error }}</p>
               </div>
 
-              <div v-else-if="cardStore.cards && cardStore.cards.length" class="flex space-x-4">
+              <div v-else-if="cardStore.cards && cardStore.cards.length" class="flex space-x-4 ">
                 <div 
                   v-for="(card, index) in cardStore.cards" 
                   :key="index" 
-                  class="card bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4 min-w-[250px]"
+                  class="card bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl p-4 min-w-[300px]"
                 >
-                  <div class="text-sm">Balance</div>
-                  <div class="text-xl font-bold mb-4 py-2">
-                    {{ formatNumberWithCommas(card.balance) }}
+                  <div class="py-2">
+                    <div class="text-sm">Balance</div>
+                    <div class="text-xl font-bold mb-4">
+                      {{ formatNumberWithCommas(card.balance) }}
+                    </div>
                   </div>
-                  <div class="text-sm tracking-widest">**** **** **** {{ card.number.slice(-4) }}</div>
+
+                  <div>
+                    <div class="text-sm">Card Number</div>
+                    <div class="text-sm tracking-widest">**** **** **** {{ card.number.slice(-4) }}</div>
+                  </div>
+                  
                   <div class="flex justify-between text-xs mt-2 py-2">
                     <span>EXP: {{ card.expiry }}</span>
                     <span>CVV: {{ card.cvv }}</span>
@@ -80,7 +88,7 @@
 
         <!-- Withdraw Modal -->
         <transition name="slide-up">
-          <div v-if="showWithdrawModal" class="popups-modal fixed bottom-2 h-1/3 z-50 bg-white rounded-t-3xl shadow-lg text-gray-500">
+          <div v-if="showWithdrawModal" class="popups-modal fixed inset-x-0 z-50 bottom-2 w-full md:w-2/3 lg:w-1/3 h-[35%] bg-white rounded-t-3xl shadow-lg p-4 text-gray-500">
             <h2 class="text-xl font-bold">Withdraw to MPESA</h2>
             <hr />
             <button @click="showWithdrawModal = false" class="x-button text-sm text-gray-500">x</button>
@@ -100,7 +108,7 @@
 
         <!-- Send Modal -->
         <transition name="slide-up">
-          <div v-if="showSendModal" class="popups-modal fixed bottom-2 h-1/3 z-50 bg-white rounded-t-3xl shadow-lg text-gray-500">
+          <div v-if="showSendModal" class="popups-modal fixed inset-x-0 z-50 bottom-2 w-full md:w-2/3 lg:w-1/3 h-[35%] bg-white rounded-t-3xl shadow-lg p-4 text-gray-500">
             <h2 class="text-xl font-bold">Send Money</h2>
             <hr/>
             <button @click="showSendModal = false" class="x-button text-sm text-gray-500">x</button>
@@ -121,7 +129,7 @@
 
         <!-- Exchange Modal -->
         <transition name="slide-up">
-          <div v-if="showExchangeModal" class="popups-modal fixed bottom-2 h-1/3 z-50 bg-white rounded-t-3xl shadow-lg text-gray-500">
+          <div v-if="showExchangeModal" class="popups-modal fixed inset-x-0 z-50 bottom-2 w-full md:w-2/3 lg:w-1/3 h-[35%] bg-white rounded-t-3xl shadow-lg p-4 text-gray-500">
             <h2 class="text-xl font-bold">Exchange Currency</h2>
             <hr/>
             <button @click="showExchangeModal = false" class="x-button text-sm text-gray-500">x</button>
@@ -162,7 +170,7 @@
 
         <!-- Deposit Modal -->
         <transition name="slide-up">
-          <div v-if="showDepositModal" class="popups-modal fixed bottom-2 h-1/3 z-50 bg-white rounded-t-3xl shadow-lg text-gray-500">
+          <div v-if="showDepositModal" class="popups-modal fixed inset-x-0 z-50 bottom-2 w-full md:w-2/3 lg:w-1/3 h-[35%] bg-white rounded-t-3xl shadow-lg p-4 text-gray-500">
             <h2 class="text-xl font-bold">Deposit Money</h2>
             <hr />
             <button @click="showDepositModal = false" class="x-button text-sm text-gray-500">x</button>
@@ -193,7 +201,7 @@
           ©Capital Land Investments 2025. All Rights Reserved.
         </footer>
     </div>
-  </template>
+</template>
   
   
   
@@ -303,7 +311,7 @@
 </script>
   
 
-  <style scoped>
+  <style scoped >
     .cards-section h2 {
       margin-top: 1rem;
     }
@@ -321,7 +329,7 @@
       border-radius: 1.5rem;
       padding: 1.5rem;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      width: 80%;
+      width: 75%;
       margin: auto;
     }
 
@@ -350,12 +358,41 @@
 
     .slide-up-enter-active, 
     .slide-up-leave-active {
-      transition: transform 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .slide-up-enter-from, 
     .slide-up-leave-to {
       transform: translateY(100%);
+      opacity: 0;
     }
+
+    .slide-up-enter-to,
+    .slide-up-leave-from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+
+    @media (min-width: 1025px) {  
+    .main-screen {
+      width: 80rem;
+      margin: auto;
+      position: relative;
+      top: 0;
+      right: 2rem;
+    }
+
+    .main-content {
+      position: relative;
+      width: 60rem;
+      border: 1px solid rgba(216, 130, 238, 0.63);
+      background-color: rgba(202, 171, 202, 0.096);
+      /* border-radius: 1.5rem; */
+      
+    }
+  }
+
+
 
 </style>
